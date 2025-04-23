@@ -24,7 +24,7 @@ class AdminController extends Controller
         $lateFeePerDay = 0.50; // $0.50 per day late
 
         // Fetch all books
-        $books = Book::with('genre')->get();
+        $books = Book::with('genres')->get();
 
         // Fetch all genres
         $genres = Genre::orderBy('name')->get();
@@ -68,7 +68,8 @@ class AdminController extends Controller
                 'publisher' => 'nullable|string|max:255',
                 'description' => 'nullable|string',
                 'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'genre_id' => 'required|exists:genres,id',
+                'genre_ids' => 'required|array',
+                'genre_ids.*' => 'exists:genres,id',
                 'quantity' => 'required|integer|min:0',
             ]);
 
@@ -80,9 +81,10 @@ class AdminController extends Controller
                 'publisher' => $request->publisher,
                 'description' => $request->description,
                 'cover_image' => $coverImagePath,
-                'genre_id' => $request->genre_id,
                 'quantity' => $request->quantity,
             ]);
+
+            $book->genres()->sync($request->genre_ids);
 
             // Log the initial stock addition
             StockHistory::create([
@@ -113,7 +115,8 @@ class AdminController extends Controller
                 'publisher' => 'nullable|string|max:255',
                 'description' => 'nullable|string',
                 'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'genre_id' => 'required|exists:genres,id',
+                'genre_ids' => 'required|array',
+                'genre_ids.*' => 'exists:genres,id',
             ]);
 
             $data = [
@@ -121,7 +124,6 @@ class AdminController extends Controller
                 'author' => $request->author,
                 'publisher' => $request->publisher,
                 'description' => $request->description,
-                'genre_id' => $request->genre_id,
             ];
 
             if ($request->hasFile('cover_image')) {
@@ -133,6 +135,8 @@ class AdminController extends Controller
             }
 
             $book->update($data);
+
+            $book->genres()->sync($request->genre_ids);
 
             return redirect()->route('admin.index')->with('success', 'Book updated successfully.');
         } catch (\Exception $e) {

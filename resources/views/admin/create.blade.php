@@ -105,6 +105,25 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .genre-checkboxes {
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            background: #d9d9d9;
+            border-radius: 4px;
+        }
+
+        .genre-checkboxes label {
+            display: block;
+            padding: 4px 0;
+            color: #121246;
+            cursor: pointer;
+        }
+
+        .genre-checkboxes input[type="checkbox"] {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -154,15 +173,16 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="genre_id">Genre</label>
-                <select name="genre_id" id="genre_id">
+                <label for="genres">Genres</label>
+                <div class="genre-checkboxes">
                     @foreach ($genres as $genre)
-                        <option value="{{ $genre->id }}" {{ old('genre_id') == $genre->id ? 'selected' : '' }}>
+                        <label>
+                            <input type="checkbox" name="genre_ids[]" value="{{ $genre->id }}" {{ (collect(old('genre_ids'))->contains($genre->id)) ? 'checked' : '' }}>
                             {{ $genre->name }}
-                        </option>
+                        </label>
                     @endforeach
-                </select>
-                @error('genre_id')
+                </div>
+                @error('genre_ids')
                     <div class="error">{{ $message }}</div>
                 @enderror
             </div>

@@ -114,7 +114,13 @@
                         <tr>
                             <td>{{ $book->title }}</td>
                             <td>{{ $book->author ?? 'Unknown' }}</td>
-                            <td>{{ $book->genre->name ?? 'N/A' }}</td>
+                            <td>
+                                @if($book->genres->isNotEmpty())
+                                    {{ $book->genres->pluck('name')->join(', ') }}
+                                @else
+                                    N/A
+                                @endif
+                            </td>
                             <td>{{ $book->quantity }}</td>
                             <td>
                                 <a href="{{ route('admin.edit', $book) }}"><button class="action-button">Edit</button></a>

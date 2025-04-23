@@ -9,7 +9,9 @@ class RemoveGenreIdFromBooksTable extends Migration
     public function up()
     {
         Schema::table('books', function (Blueprint $table) {
+            // Drop foreign key by column name
             $table->dropForeign(['genre_id']);
+            // Drop the column
             $table->dropColumn('genre_id');
         });
     }

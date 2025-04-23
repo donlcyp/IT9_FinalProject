@@ -97,4 +97,9 @@ class User extends Authenticatable
             }
         });
     }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(\App\Models\Book::class, 'user_favorites')->withTimestamps();
+    }
 }

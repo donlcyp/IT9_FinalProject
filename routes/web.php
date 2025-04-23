@@ -39,7 +39,10 @@ Route::middleware('auth')->group(function () {
 
     // Favorites routes
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');
-    Route::post('/books/{book}/favorites', [BookController::class, 'addToFavorites'])->name('favorites.add');
+    Route::post('/books/{book}/favorites', [BookController::class, 'toggleFavorite'])->name('favorites.toggle');
+
+    // Toggle borrow route
+    Route::post('/books/{book}/toggle-borrow', [BookController::class, 'toggleBorrow'])->name('books.toggleBorrow');
 
     // Transaction route
     Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
