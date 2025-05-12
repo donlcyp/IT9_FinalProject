@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites - Grand Archives</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         /* Reset and base styles */
@@ -117,6 +118,7 @@
             display: flex;
             align-items: center;
             padding: 0 15px;
+            position: relative;
         }
 
         .search-input {
@@ -126,13 +128,7 @@
             font-family: "Inter-Regular", sans-serif;
             font-size: 16px;
             outline: none;
-        }
-
-        .magnifying-1 {
-            width: 24px;
-            height: 24px;
-            margin-left: 10px;
-            cursor: pointer;
+            border: none;
         }
 
         /* Favorites container */
@@ -272,7 +268,7 @@
             <div class="search-container">
                 <div class="rectangle-7">
                     <input type="text" class="search-input" placeholder="Search favorites..." />
-                    <img class="magnifying-1" src="{{ asset('images/logo1.png') }}" alt="Search" />
+                    <span class="material-symbols-outlined" style="color:black">search</span>
                 </div>
             </div>
             <div class="favorites-content">

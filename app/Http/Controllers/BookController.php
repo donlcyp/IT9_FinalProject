@@ -190,6 +190,11 @@ class BookController extends Controller
             return redirect()->back()->with('error', 'You have already borrowed this book.');
         }
 
+        // Check if the book quantity is available
+        if ($book->quantity <= 0) {
+            return redirect()->back()->with('error', 'This book is currently out of stock.');
+        }
+
         // Create a new borrowing record
         BorrowedBook::create([
             'book_id' => $book->id,
@@ -198,6 +203,10 @@ class BookController extends Controller
             'borrowed_at' => now(),
             'due_date' => now()->addDays(14),
         ]);
+
+        // Decrement the book quantity and save
+        $book->quantity -= 1;
+        $book->save();
 
         return redirect()->back()->with('success', 'Book borrowed successfully. Due date: ' . now()->addDays(14)->format('Y-m-d'));
     }
@@ -231,8 +240,28 @@ class BookController extends Controller
             $existingBorrow->returned_at = now();
             $existingBorrow->status = 'returned';
             $existingBorrow->save();
+
+            // Increment book quantity and save
+            $book->quantity += 1;
+            $book->save();
+
             $borrowed = false;
         } else {
+            // Check if book is available (not borrowed by others)
+            $isBorrowedByOthers = \App\Models\BorrowedBook::where('book_id', $book->id)
+                ->where('status', 'borrowed')
+                ->whereNull('returned_at')
+                ->exists();
+
+            if ($isBorrowedByOthers) {
+                return response()->json(['error' => 'Book is currently borrowed by another user.'], 403);
+            }
+
+            // Check if the book quantity is available
+            if ($book->quantity <= 0) {
+                return response()->json(['error' => 'This book is currently out of stock.'], 403);
+            }
+
             // Create new borrow record
             $user->borrowedBooks()->create([
                 'book_id' => $book->id,
@@ -240,6 +269,11 @@ class BookController extends Controller
                 'borrowed_at' => now(),
                 'due_date' => now()->addDays(14),
             ]);
+
+            // Decrement book quantity and save
+            $book->quantity -= 1;
+            $book->save();
+
             $borrowed = true;
         }
 

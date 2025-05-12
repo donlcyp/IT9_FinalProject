@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogs - Grand Archives</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         /* Reset and base styles */
@@ -128,13 +129,6 @@
             font-size: 16px;
             outline: none;
             border: none;
-        }
-
-        .magnifying-1 {
-            width: 24px;
-            height: 24px;
-            margin-left: 10px;
-            cursor: pointer;
         }
 
         /* Genre cards */
@@ -315,7 +309,7 @@
                 <form method="GET" action="{{ route('catalogs') }}" class="rectangle-7">
                     <input type="text" name="search" class="search-input" placeholder="Search genres..." value="{{ request('search') }}" />
                     <button type="submit" style="background: none; border: none; padding: 0;">
-                        <img class="magnifying-1" src="{{ asset('images/magnifying-10.png') }}" alt="Search" />
+                        <span class="material-symbols-outlined">search</span>
                     </button>
                 </form>
             </div>

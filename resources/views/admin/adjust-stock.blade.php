@@ -136,9 +136,32 @@
                         <option value="stock_out">Stock Out (Remove Copies)</option>
                     </select>
                 </div>
+                <div class="form-group" id="supplier-group" style="display:none;">
+                    <label for="supplier_id">Supplier:</label>
+                    <select name="supplier_id" id="supplier_id">
+                        <option value="">Select Supplier</option>
+                        @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <button type="submit" class="button">Update Stock</button>
                 <a href="{{ route('admin.index') }}" class="cancel-button">Cancel</a>
             </form>
+            <script>
+                document.getElementById('action').addEventListener('change', function() {
+                    var supplierGroup = document.getElementById('supplier-group');
+                    if (this.value === 'stock_in') {
+                        supplierGroup.style.display = 'block';
+                        document.getElementById('supplier_id').setAttribute('required', 'required');
+                    } else {
+                        supplierGroup.style.display = 'none';
+                        document.getElementById('supplier_id').removeAttribute('required');
+                    }
+                });
+                // Trigger change event on page load to set initial state
+                document.getElementById('action').dispatchEvent(new Event('change'));
+            </script>
         </div>
 
         <!-- Stock History -->

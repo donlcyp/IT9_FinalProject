@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [AdminController::class, 'store'])->name('admin.store');
         Route::get('/edit/{book}', [AdminController::class, 'edit'])->name('admin.edit');
         Route::put('/update/{book}', [AdminController::class, 'update'])->name('admin.update');
-        Route::post('/borrow-status/{borrowedBook}', [AdminController::class, 'updateBorrowStatus'])->name('admin.updateBorrowStatus');
+Route::match(['post', 'put'], '/borrow-status/{borrowedBook}', [AdminController::class, 'updateBorrowStatus'])->name('admin.updateBorrowStatus');
         Route::post('/mark-as-paid/{borrowedBook}', [AdminController::class, 'markAsPaid'])->name('admin.markAsPaid');
         Route::get('/adjust-stock/{book}', [AdminController::class, 'adjustStock'])->name('admin.adjustStock');
         Route::post('/update-stock/{book}', [AdminController::class, 'updateStock'])->name('admin.updateStock');
@@ -77,6 +77,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])->name('admin.genres.edit');
         Route::put('/genres/{genre}', [GenreController::class, 'update'])->name('admin.genres.update');
         Route::delete('/genres/{genre}', [GenreController::class, 'destroy'])->name('admin.genres.destroy');
+
+        // Supplier routes
+        Route::get('/suppliers/create', [\App\Http\Controllers\Admin\SupplierController::class, 'create'])->name('admin.suppliers.create');
+        Route::post('/suppliers', [\App\Http\Controllers\Admin\SupplierController::class, 'store'])->name('admin.suppliers.store');
     });
     
     // Dashboard borrow route

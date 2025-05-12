@@ -19,6 +19,35 @@
             background: #f9f8f4;
             color: #121246;
             padding: 20px;
+            padding-top: 100px; /* Offset for fixed header */
+        }
+        .rectangle-5 {
+            background: #ded9c3;
+            width: 100%;
+            height: 80px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-bottom: 2px solid #b5835a;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .header-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #121246;
         }
         .book-container {
             max-width: 800px;
@@ -26,6 +55,7 @@
             background: #ded9c3;
             border-radius: 8px;
             padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .book-header {
             display: flex;
@@ -41,7 +71,6 @@
             overflow: hidden;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .book-cover {
             width: 100%;
@@ -49,10 +78,6 @@
             object-fit: cover;
             border-radius: 8px;
             display: block;
-        }
-        .book-cover-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
         @media (min-width: 768px) {
             .book-cover-container {
@@ -86,7 +111,7 @@
             margin-bottom: 20px;
         }
         .book-rating {
-            margin-top: 20px; 
+            margin-top: 20px;
             color: #121246;
         }
         .back-button {
@@ -97,6 +122,7 @@
             border-radius: 4px;
             text-decoration: none;
             margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .back-button:hover {
             background: #b5835a;
@@ -109,6 +135,7 @@
             border: none;
             cursor: pointer;
             font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .borrow-button:hover {
             background: #b5835a;
@@ -152,6 +179,14 @@
     </style>
 </head>
 <body>
+    <header>
+        <div class="rectangle-5">
+            <div class="header-content">
+                <img src="/images/logo1.png" alt="The Grand Archives Logo" class="header-logo">
+                <div class="header-title">The Grand Archives</div>
+            </div>
+        </div>
+    </header>
     <div class="book-container">
         <div class="book-header">
             <div class="book-cover-container">
@@ -174,79 +209,149 @@
                     {{ $book->description ?? 'No description available.' }}
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                <form id="borrow-form" action="{{ route('books.toggleBorrow', $book) }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" id="borrow-button" class="borrow-button">
+                    <div id="borrow-section" style="display: flex; gap: 10px; align-items: center;">
                         @php
-                            $userBorrowed = auth()->check() && auth()->user()->borrowedBooks()
+                            $userBorrowedRecord = auth()->check() ? auth()->user()->borrowedBooks()
                                 ->where('book_id', $book->id)
                                 ->where('status', 'borrowed')
                                 ->whereNull('returned_at')
+                                ->first() : null;
+
+                            $isBorrowedByOthers = \App\Models\BorrowedBook::where('book_id', $book->id)
+                                ->where('status', 'borrowed')
+                                ->whereNull('returned_at')
+                                ->where('user_id', '!=', auth()->id())
                                 ->exists();
+
+                            $borrowButtonDisabled = $isBorrowedByOthers && !$userBorrowedRecord;
                         @endphp
-                        {{ $userBorrowed ? 'Return Book' : 'Borrow This Book' }}
-                    </button>
-                </form>
-                <form id="favorite-form" action="{{ route('favorites.toggle', $book) }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" id="favorite-button" class="borrow-button">
-                        @if(!empty($isFavorited) && $isFavorited)
-                            Remove from Favorites
-                        @else
-                            Add to Favorites
+
+                        <button id="borrow-button" class="borrow-button"
+                            @if($borrowButtonDisabled) disabled @endif>
+                            {{ $userBorrowedRecord ? 'Return Book' : ($borrowButtonDisabled ? 'Not Available' : 'Borrow This Book') }}
+                        </button>
+
+                        @if($userBorrowedRecord)
+                            <div>
+                                <strong>Due Date:</strong> {{ $userBorrowedRecord->due_date->format('Y-m-d') }}
+                                @php
+                                    $lateFee = $userBorrowedRecord->calculateLateFee();
+                                @endphp
+                                @if($lateFee > 0)
+                                    <span style="color: red;">(Late Fee: ${{ number_format($lateFee, 2) }})</span>
+                                @endif
+                            </div>
                         @endif
-                    </button>
-                </form>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const favoriteForm = document.getElementById('favorite-form');
-                        const favoriteButton = document.getElementById('favorite-button');
+                        <div id="borrow-feedback" style="color: green;"></div>
+                    </div>
 
-                        function toggleFavoriteAJAX(form, button) {
-                            fetch(form.action, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
-                                    'Accept': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                },
-                                body: new URLSearchParams(new FormData(form))
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.favorited) {
-                                    button.textContent = 'Remove from Favorites';
-                                } else {
-                                    button.textContent = 'Add to Favorites';
-                                }
-                                // Store favorite status in localStorage for synchronization
-                                localStorage.setItem('favorite_' + form.action, JSON.stringify(data.favorited));
-                            })
-                            .catch(error => {
-                                console.error('Error toggling favorite:', error);
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const borrowButton = document.getElementById('borrow-button');
+                            const feedback = document.getElementById('borrow-feedback');
+
+                            borrowButton.addEventListener('click', function () {
+                                borrowButton.disabled = true;
+                                feedback.textContent = '';
+
+                                fetch("{{ route('books.toggleBorrow', $book) }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                })
+                                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                                .then(({ status, body }) => {
+                                    if (status === 200) {
+                                        if (body.borrowed) {
+                                            borrowButton.textContent = 'Return Book';
+                                            feedback.style.color = 'green';
+                                            feedback.textContent = 'Book borrowed successfully.';
+                                        } else {
+                                            borrowButton.textContent = 'Borrow This Book';
+                                            feedback.style.color = 'green';
+                                            feedback.textContent = 'Book returned successfully.';
+                                        }
+                                        // Reload page after short delay to update due date and button state
+                                        setTimeout(() => location.reload(), 1000);
+                                    } else {
+                                        borrowButton.disabled = false;
+                                        feedback.style.color = 'red';
+                                        feedback.textContent = body.error || 'An error occurred.';
+                                    }
+                                })
+                                .catch(error => {
+                                    borrowButton.disabled = false;
+                                    feedback.style.color = 'red';
+                                    feedback.textContent = 'An error occurred.';
+                                    console.error('Error:', error);
+                                });
                             });
-                        }
-
-                        favoriteForm.addEventListener('submit', function (e) {
-                            e.preventDefault();
-                            toggleFavoriteAJAX(favoriteForm, favoriteButton);
                         });
+                    </script>
+                    <form id="favorite-form" action="{{ route('favorites.toggle', $book) }}" method="POST" style="margin: 0;">
+                        @csrf
+                        <button type="submit" id="favorite-button" class="borrow-button">
+                            @if(!empty($isFavorited) && $isFavorited)
+                                Remove from Favorites
+                            @else
+                                Add to Favorites
+                            @endif
+                        </button>
+                    </form>
 
-                        // On page load, synchronize favorite button based on localStorage
-                        const stored = localStorage.getItem('favorite_' + favoriteForm.action);
-                        if (stored !== null) {
-                            const favorited = JSON.parse(stored);
-                            if (favorited) {
-                                favoriteButton.textContent = 'Remove from Favorites';
-                            } else {
-                                favoriteButton.textContent = 'Add to Favorites';
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const favoriteForm = document.getElementById('favorite-form');
+                            const favoriteButton = document.getElementById('favorite-button');
+
+                            function toggleFavoriteAJAX(form, button) {
+                                fetch(form.action, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: new URLSearchParams(new FormData(form))
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.favorited) {
+                                        button.textContent = 'Remove from Favorites';
+                                    } else {
+                                        button.textContent = 'Add to Favorites';
+                                    }
+                                    // Store favorite status in localStorage for synchronization
+                                    localStorage.setItem('favorite_' + form.action, JSON.stringify(data.favorited));
+                                })
+                                .catch(error => {
+                                    console.error('Error toggling favorite:', error);
+                                });
                             }
-                            // Clear the stored value after applying
-                            localStorage.removeItem('favorite_' + favoriteForm.action);
-                        }
-                    });
-                </script>
+
+                            favoriteForm.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                toggleFavoriteAJAX(favoriteForm, favoriteButton);
+                            });
+
+                            // On page load, synchronize favorite button based on localStorage
+                            const stored = localStorage.getItem('favorite_' + favoriteForm.action);
+                            if (stored !== null) {
+                                const favorited = JSON.parse(stored);
+                                if (favorited) {
+                                    favoriteButton.textContent = 'Remove from Favorites';
+                                } else {
+                                    favoriteButton.textContent = 'Add to Favorites';
+                                }
+                                // Clear the stored value after applying
+                                localStorage.removeItem('favorite_' + favoriteForm.action);
+                            }
+                        });
+                    </script>
                 </div>
 
                 <div class="book-rating">

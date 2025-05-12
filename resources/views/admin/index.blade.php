@@ -96,6 +96,7 @@
     <div class="section">
         <h2>Book Inventory</h2>
         <a href="{{ route('admin.create') }}"><button class="button">Add New Book</button></a>
+        <a href="{{ route('admin.suppliers.create') }}"><button class="button">Add New Supplier</button></a>
         @if($books->isEmpty())
             <p class="note">No books available in the inventory.</p>
         @else

@@ -7,6 +7,8 @@ use App\Models\Genre;
 use App\Models\BorrowedBook;
 use App\Models\Transaction;
 use App\Models\StockHistory;
+use App\Models\Supplier;
+use App\Models\StockIn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -205,7 +207,8 @@ class AdminController extends Controller
     public function adjustStock(Book $book)
     {
         $stockHistories = $book->stockHistories()->orderBy('created_at', 'desc')->get();
-        return view('admin.adjust-stock', compact('book', 'stockHistories'));
+        $suppliers = Supplier::orderBy('name')->get();
+        return view('admin.adjust-stock', compact('book', 'stockHistories', 'suppliers'));
     }
 
     public function updateStock(Request $request, Book $book)
@@ -214,6 +217,7 @@ class AdminController extends Controller
             $request->validate([
                 'quantity_change' => 'required|integer',
                 'action' => 'required|in:stock_in,stock_out',
+                'supplier_id' => 'required_if:action,stock_in|exists:suppliers,id',
             ]);
 
             $quantityChange = $request->quantity_change;
@@ -238,6 +242,15 @@ class AdminController extends Controller
                 'action' => $action,
                 'performed_by' => Auth::user()->email,
             ]);
+
+            if ($action === 'stock_in') {
+                \App\Models\StockIn::create([
+                    'book_id' => $book->id,
+                    'supplier_id' => $request->supplier_id,
+                    'quantity' => $quantityChange,
+                    'performed_by' => Auth::user()->email,
+                ]);
+            }
 
             return redirect()->route('admin.index')->with('success', 'Book stock updated successfully.');
         } catch (\Exception $e) {
