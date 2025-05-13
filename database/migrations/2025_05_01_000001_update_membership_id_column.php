@@ -14,8 +14,8 @@ class UpdateMembershipIdColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Drop foreign key constraint first if exists
-            $table->dropForeign(['membership_id']);
+            // Drop foreign key constraint first
+            $table->dropForeign('users_membership_id_foreign');
             // Drop existing membership_id column
             $table->dropColumn('membership_id');
         });

@@ -9,8 +9,8 @@ class AddSupplierIdToStockHistoriesTable extends Migration
     public function up()
     {
         Schema::table('stock_histories', function (Blueprint $table) {
-            // Add the foreign key constraint to the existing supplier_id column
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('set null');
+            // Add the supplier_id column as nullable and add foreign key constraint
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
         });
     }
 
@@ -18,6 +18,7 @@ class AddSupplierIdToStockHistoriesTable extends Migration
     {
         Schema::table('stock_histories', function (Blueprint $table) {
             $table->dropForeign(['supplier_id']);
+            $table->dropColumn('supplier_id');
         });
     }
 }
