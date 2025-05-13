@@ -117,15 +117,24 @@
             border-bottom: 2px solid #b5835a;
             background: #ded9c3;
         }
+        .header-container {
+            position: absolute;
+            left: 82px;
+            top: 28px;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+            margin-right: 10px; /* Space between logo and text */
+        }
         .grand-archives2 {
             color: #121246;
             text-align: left;
             font-family: "JacquesFrancoisShadow-Regular", sans-serif;
             font-size: 40px;
             font-weight: 400;
-            position: absolute;
-            left: 82px;
-            top: 28px;
         }
         .login-link-container {
             width: 100px;
@@ -165,13 +174,14 @@
             .form-group {
                 width: 100%;
             }
-            .grand-archives2 {
-                font-size: 32px;
+            .header-container {
                 left: 20px;
             }
-            .logo-1-removebg-preview-3 {
-                max-width: 300px;
-                bottom: 10px;
+            .logo {
+                width: 50px; /* Slightly smaller logo on medium screens */
+            }
+            .grand-archives2 {
+                font-size: 32px;
             }
         }
 
@@ -190,28 +200,25 @@
             .create-btn {
                 font-size: 20px;
             }
-            .grand-archives2 {
-                font-size: 24px;
+            .header-container {
                 left: 10px;
             }
-            .logo-1-removebg-preview-3 {
-                max-width: 200px;
+            .logo {
+                width: 40px; /* Even smaller logo on small screens */
             }
-        }
-        .logo {
-            position: absolute;
-            left: 640px;
-            top: 125px;
-            width: 60px;
-            height: auto;
-            z-index: 3; /* Ensure it’s above other elements */
+            .grand-archives2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="sign-up-page">
         <div class="frame-rectangle-2"></div>
-        <div class="grand-archives2">GRAND ARCHIVES</div>
+        <div class="header-container">
+            <img src="/images/logo1.png" alt="Grand Archives Logo" class="logo">
+            <div class="grand-archives2">GRAND ARCHIVES</div>
+        </div>
         <div class="frame-rectangle-3">
             <div class="login-signup">SIGNUP</div>
             <form method="POST" action="{{ route('register') }}">
