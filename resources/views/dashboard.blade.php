@@ -369,7 +369,7 @@
                 <span class="material-symbols-outlined">menu</span>
             </button>
             <div class="rectangle-5">
-                <div class="home-title">DASHBOARD</div>
+                <div class="home-title">HOME</div>
             </div>
 
             <div style="margin: 20px auto; max-width: 1100px; background: #ded9c3; border-radius: 8px; padding: 15px; color: #121246; display: flex; align-items: center; gap: 10px;">

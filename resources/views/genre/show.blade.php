@@ -8,6 +8,7 @@
     <title>{{ $genre->name }} - Grand Archives</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     @vite(['resources/css/app.css'])
 
     <style>
@@ -317,6 +318,14 @@
             border-radius: 4px;
             max-width: 500px;
         }
+    
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
 
         .success-message {
             background: #b5835a;
@@ -417,7 +426,6 @@
                 <form method="GET" action="{{ route('genre.show', $genre->id) }}">
                     <input type="text" name="search" class="rectangle-7" placeholder="Search books..." value="{{ request('search') }}">
                     <button type="submit" style="background: none; border: none; padding: 0;">
-                        <img class="magnifying-1" src="{{ asset('images/magnifying-10.png') }}" alt="Search Icon" />
                     </button>
                 </form>
             </div>

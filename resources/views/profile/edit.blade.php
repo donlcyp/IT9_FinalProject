@@ -93,9 +93,14 @@
             font-family: "Inter-Regular", sans-serif;
             font-size: 28px;
             font-weight: 600;
-            position: relative;
-            top: 25px;
-            z-index: 2;
+            position: fixed; /* Changed to fixed to stay at the top */
+            top: 25px; /* Aligns with original positioning */
+            left: 0;
+            right: 0;
+            z-index: 2; /* Above rectangle-5 but below menu-button */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
         }
 
         .profile-content {
@@ -148,7 +153,7 @@
             width: 171px;
             height: 171px;
             object-fit: cover;
-            margin: 0 auto;
+pure css solution to make an element stick to top of page when scrolling            margin: 0 auto;
             display: block;
         }
 
@@ -205,6 +210,7 @@
 
             .profile {
                 font-size: 22px;
+                top: 28px; /* Slightly adjusted for smaller screens */
             }
 
             .profile-content {
@@ -248,14 +254,16 @@
                 gap: 10px;
             }
         }
+
         .images-1-1 {
             border-radius: 85.5px;
             width: 171px;
             height: 171px;
             object-fit: cover;
-            z-index: 5;
+            z-index: 0; /* Changed from 5 to 0 to ensure it stays below rectangle-5 */
             position: relative;
             display: block; /* Ensure it’s visible */
+            margin: 0 auto; /* Center the image */
         }
     </style>
 </head>
