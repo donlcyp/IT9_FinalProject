@@ -24,7 +24,7 @@ class DashboardController extends Controller
 
         // Fetch trending books (latest 5 books)
         $books = Book::orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(100)
             ->get();
 
         // Add average rating and rating count to each trending book
@@ -45,7 +45,7 @@ class DashboardController extends Controller
             )
             ->orderByRaw('CASE WHEN borrow_counts.borrow_count IS NULL THEN 1 ELSE 0 END')
             ->orderBy('borrow_counts.borrow_count', 'desc')
-            ->take(5)
+            ->take(100)
             ->get();
 
         // Add average rating and rating count to each top book
@@ -67,7 +67,7 @@ class DashboardController extends Controller
             )
             ->orderByRaw('CASE WHEN return_counts.return_count IS NULL THEN 1 ELSE 0 END')
             ->orderBy('return_counts.return_count', 'desc')
-            ->take(5)
+            ->take(100)
             ->get();
 
         // Add average rating and rating count to each most read book

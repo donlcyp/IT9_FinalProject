@@ -1,4 +1,3 @@
-<!-- resources/views/catalogs.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogs - Grand Archives</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         /* Reset and base styles */
@@ -19,7 +20,7 @@
 
         body, html {
             height: 100%;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
             background: #121246;
             color: #fff;
             overflow-x: hidden;
@@ -30,105 +31,139 @@
             width: 100%;
             min-height: 100vh;
             position: relative;
+            overflow: hidden;
         }
 
-        /* Navigation styles */
-        .navigation {
+        /* Hover area for desktop */
+        .hover-area {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100vh;
+            background: transparent;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
             width: 250px;
-            background: #121246;
+            background: rgba(18, 18, 70, 0.9);
+            backdrop-filter: blur(10px);
             height: 100vh;
             position: fixed;
-            left: -250px;
+            left: -280px;
             top: 0;
             transition: left 0.3s ease-in-out;
             z-index: 10;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
         }
 
-        .navigation.active {
+        .sidebar[aria-expanded="true"] {
             left: 0;
         }
 
-        .menu-button {
+        /* Header with logo and title */
+        .header-container {
+            width: 100%;
+            height: 80px;
+            background: rgba(222, 217, 195, 0.9);
+            backdrop-filter: blur(8px);
             position: fixed;
-            left: 20px;
-            top: 20px;
-            cursor: pointer;
-            z-index: 20;
-            color: #121246; /* Changed to match theme */
-            font-size: 28px;
-            background: transparent;
-            border: none;
-            transition: color 0.2s;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #b5835a;
         }
 
-        .menu-button:hover {
-            color: #b5835a;
+        .logo {
+            width: 60px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .grand-archives2 {
+           color: #121246;
+            text-align: center;
+            font-family: "Inter-Regular", sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.3);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
         }
 
         /* Main content styles */
         .catalog-selection-page {
             flex: 1;
-            background: #f9f8f4;
+            background: linear-gradient(135deg, #f9f8f4 0%, #f0f0e4 100%);
             min-height: 100vh;
-            padding-left: 0px;
+            padding-left: 0;
             transition: padding-left 0.3s ease-in-out;
-        }
-
-        .catalog-selection-page.nav-active {
-            padding-left: 310px;
-        }
-
-        .rectangle-5 {
-            background: #ded9c3;
-            width: 100%;
-            height: 80px;
-            position: fixed; /* Kept as fixed per original design */
-            left: 0;
-            top: 0;
-            border-bottom: 2px solid #b5835a;
+            position: relative;
             z-index: 1;
-            display: flex; /* Added to center the catalogs text */
-            justify-content: center; /* Horizontally center */
-            align-items: center; /* Vertically center */
         }
 
-        .catalogs {
-            color: #121246;
-            text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 28px;
-            font-weight: 600;
-            z-index: 2;
+        .catalog-selection-page[aria-nav-expanded="true"] {
+            padding-left: 280px; /* Shift content right when sidebar is open on desktop */
         }
 
         /* Search bar styles */
         .search-container {
             display: flex;
             justify-content: center;
-            margin: 100px 0 40px;
+            margin: 100px 0 40px; /* Adjusted for header height */
         }
 
         .rectangle-7 {
-            background: #d9d9d9;
-            border-radius: 8px;
+            background: rgba(217, 217, 217, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
             width: 100%;
             max-width: 500px;
-            height: 47px;
+            height: 50px;
             display: flex;
             align-items: center;
             padding: 0 15px;
             position: relative;
+            border: 1px solid rgba(181, 131, 90, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .rectangle-7:hover {
+            box-shadow: 0 0 15px rgba(181, 131, 90, 0.3);
         }
 
         .search-input {
             flex: 1;
             background: transparent;
             color: #121246;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: "Inter", sans-serif;
             font-size: 16px;
             outline: none;
             border: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            color: #121246;
+            box-shadow: inset 0 0 5px rgba(181, 131, 90, 0.2);
+        }
+
+        .material-symbols-outlined {
+            color: #b5835a;
+            transition: transform 0.2s ease;
+        }
+
+        .material-symbols-outlined:hover {
+            transform: scale(1.2);
         }
 
         /* Genre cards */
@@ -147,22 +182,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.3);
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: calc(var(--index) * 0.1s);
+            opacity: 0;
         }
 
         .genre-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(181, 131, 90, 0.4);
+            transform: translateY(-5px);
         }
 
         .genre-card a {
-            color: #121246;
+            color: #ded9c3;
             text-align: center;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: "Inter", sans-serif;
             font-size: 20px;
-            font-weight: 400;
-            padding: 0 10px; /* Add padding for longer genre names */
+            font-weight: 500;
+            padding: 0 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -174,6 +213,18 @@
             justify-content: center;
         }
 
+        /* Fade-in animation for genre cards */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Pagination styles */
         .pagination {
             display: flex;
@@ -181,30 +232,31 @@
             align-items: center;
             margin-top: 20px;
             margin-bottom: 40px;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: "Inter", sans-serif;
             font-size: 14px;
             color: #ded9c3;
         }
 
         .pagination a, .pagination span {
             color: #121246;
-            padding: 4px 8px;
+            background: rgba(222, 217, 195, 0.8);
+            padding: 6px 12px;
             text-decoration: none;
             margin: 0 4px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .pagination a:hover {
             background-color: #b5835a;
-            color: #121246;
+            transform: scale(1.1);
         }
 
         .pagination .current {
-            background-color: #ded9c3;
-            color: #121246;
-            padding: 4px 8px;
-            border-radius: 4px;
+            background-color: #b5835a;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
         }
 
         .pagination .disabled {
@@ -220,16 +272,29 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .catalog-selection-page {
-                padding-left: 50px;
+            .hover-area {
+                display: none; /* Disable hover area on mobile */
             }
 
-            .catalog-selection-page.nav-active {
-                padding-left: 260px;
+            .sidebar {
+                width: 240px;
+                left: -240px;
             }
 
-            .catalogs {
-                font-size: 22px;
+            .header-container {
+                height: 70px;
+            }
+
+            .logo {
+                width: 50px;
+            }
+
+            .grand-archives2 {
+                font-size: 32px;
+            }
+
+            .search-container {
+                margin: 90px 0 30px;
             }
 
             .rectangle-7 {
@@ -253,30 +318,47 @@
             }
 
             .pagination a, .pagination span {
-                padding: 3px 6px;
+                padding: 4px 8px;
             }
 
             .pagination .chevron {
                 font-size: 16px;
             }
+
+            .catalog-selection-page[aria-nav-expanded="true"] {
+                padding-left: 0; /* No shift on mobile */
+            }
         }
 
         @media (max-width: 480px) {
-            .navigation {
+            .sidebar {
                 width: 200px;
+                left: -200px;
             }
 
-            .catalog-selection-page.nav-active {
-                padding-left: 220px;
+            .header-container {
+                height: 60px;
             }
 
-            .menu-button {
-                left: 10px;
-                top: 15px;
+            .logo {
+                width: 40px;
+                margin-right: 8px;
+            }
+
+            .grand-archives2 {
+                font-size: 24px;
+            }
+
+            .search-container {
+                margin: 80px 0 20px;
             }
 
             .rectangle-7 {
                 max-width: 300px;
+            }
+
+            .genre-grid {
+                padding: 0 10px;
             }
 
             .pagination {
@@ -284,7 +366,7 @@
             }
 
             .pagination a, .pagination span {
-                padding: 2px 4px;
+                padding: 3px 6px;
             }
 
             .pagination .chevron {
@@ -295,15 +377,13 @@
 </head>
 <body>
     <div class="catalog-container">
-        <div class="navigation">
+        <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
+        <div class="sidebar" aria-expanded="false">
             @include('layouts.navigation')
         </div>
-        <div class="catalog-selection-page">
-            <button class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div class="rectangle-5">
-                <div class="catalogs">CATALOGS</div>
+        <div class="catalog-selection-page" aria-nav-expanded="false">
+            <div class="header-container">
+                <div class="grand-archives2" role="heading" aria-level="1">CATALOGS</div>
             </div>
             <div class="search-container">
                 <form method="GET" action="{{ route('catalogs') }}" class="rectangle-7">
@@ -315,7 +395,7 @@
             </div>
             <div class="genre-grid">
                 @forelse ($genres as $genre)
-                    <div class="genre-card">
+                    <div class="genre-card" style="--index: {{ $loop->index }}">
                         <a href="{{ route('genre.show', $genre->id) }}">{{ $genre->name }}</a>
                     </div>
                 @empty
@@ -329,14 +409,50 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.menu-button');
-            const navigation = document.querySelector('.navigation');
+            const hoverArea = document.querySelector('.hover-area');
+            const sidebar = document.querySelector('.sidebar');
             const catalogPage = document.querySelector('.catalog-selection-page');
 
-            menuButton.addEventListener('click', function() {
-                navigation.classList.toggle('active');
-                catalogPage.classList.toggle('nav-active');
-            });
+            // Desktop hover navigation
+            if (hoverArea) {
+                hoverArea.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'true');
+                        catalogPage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
+
+                hoverArea.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768 && !sidebar.matches(':hover')) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        catalogPage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                sidebar.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'true');
+                        catalogPage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
+
+                sidebar.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        catalogPage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                // Keyboard accessibility for hover area
+                hoverArea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' && window.innerWidth > 768) {
+                        e.preventDefault();
+                        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+                        sidebar.setAttribute('aria-expanded', !isExpanded);
+                        catalogPage.setAttribute('aria-nav-expanded', !isExpanded);
+                    }
+                });
+            }
         });
     </script>
 </body>

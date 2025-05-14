@@ -45,9 +45,17 @@
             object-fit: contain;
         }
         .header-title {
-            font-size: 28px;
-            font-weight: 600;
             color: #121246;
+            text-align: center;
+            font-family: "Inter-Regular", sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.3);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
         }
         .book-container {
             max-width: 800px;
@@ -109,6 +117,7 @@
             color: #121246;
             line-height: 1.6;
             margin-bottom: 20px;
+            text-align: justify;
         }
         .book-rating {
             margin-top: 20px;
@@ -146,35 +155,15 @@
         }
         .fa-star {
             font-size: 24px;
-            cursor: pointer;
             color: #ccc;
         }
         .checked {
             color: #ffca08;
         }
-        .star-rating {
+        .star-display {
             font-size: 24px;
             display: flex;
             gap: 5px;
-            direction: rtl;
-            unicode-bidi: normal;
-        }
-        .star-rating input[type="radio"] {
-            display: none;
-        }
-        .star-rating label {
-            color: #ccc;
-            padding: 0 5px;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-        .star-rating input[type="radio"]:checked + label,
-        .star-rating input[type="radio"]:checked ~ label {
-            color: #ffca08;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #ffca08;
         }
     </style>
 </head>
@@ -356,27 +345,21 @@
 
                 <div class="book-rating">
                     <h4>Average Rating: {{ number_format($averageRating ?? 0, 1) }} / 5</h4>
-
                     @auth
-                    <form action="{{ route('books.rate', $book->id) }}" method="POST" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
-                        @csrf
-                        <label for="rating" style="margin-right: 10px;">Rate this book:</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="rating" value="5" {{ auth()->user()->ratings()->where('book_id', $book->id)->first()?->rating == 5 ? 'checked' : '' }} required>
-                            <label for="star5" title="5 stars">★</label>
-                            <input type="radio" id="star4" name="rating" value="4" {{ auth()->user()->ratings()->where('book_id', $book->id)->first()?->rating == 4 ? 'checked' : '' }}>
-                            <label for="star4" title="4 stars">★</label>
-                            <input type="radio" id="star3" name="rating" value="3" {{ auth()->user()->ratings()->where('book_id', $book->id)->first()?->rating == 3 ? 'checked' : '' }}>
-                            <label for="star3" title="3 stars">★</label>
-                            <input type="radio" id="star2" name="rating" value="2" {{ auth()->user()->ratings()->where('book_id', $book->id)->first()?->rating == 2 ? 'checked' : '' }}>
-                            <label for="star2" title="2 stars">★</label>
-                            <input type="radio" id="star1" name="rating" value="1" {{ auth()->user()->ratings()->where('book_id', $book->id)->first()?->rating == 1 ? 'checked' : '' }}>
-                            <label for="star1" title="1 star">★</label>
+                        @php
+                            $userRating = auth()->user()->ratings()->where('book_id', $book->id)->first();
+                            $userRatingValue = $userRating ? $userRating->rating : 0;
+                        @endphp
+                        <div style="margin-top: 10px;">
+                            <span>Your Rating: </span>
+                            <div class="star-display">
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <i class="fa fa-star {{ $i <= $userRatingValue ? 'checked' : '' }}"></i>
+                                @endfor
+                            </div>
                         </div>
-                        <button type="submit" style="margin-left: 10px; padding: 5px 10px; background: #d4a373; color: #121246; border: none; border-radius: 4px; cursor: pointer;">Submit</button>
-                    </form>
                     @else
-                    <p><a href="{{ route('login') }}">Log in</a> to rate this book.</p>
+                        <p><a href="{{ route('login') }}">Log in</a> to see your rating.</p>
                     @endauth
                 </div>
             </div>

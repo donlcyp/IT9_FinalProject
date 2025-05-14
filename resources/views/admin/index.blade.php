@@ -172,7 +172,6 @@
                                 @if($borrowedBook->status === 'borrowed')
                                     <form action="{{ route('admin.updateBorrowStatus', $borrowedBook) }}" method="POST" style="display:inline;">
                                         @csrf
-                                        @method('POST')
                                         <input type="hidden" name="status" value="returned">
                                         <button type="submit" class="action-button">Mark as Returned</button>
                                     </form>

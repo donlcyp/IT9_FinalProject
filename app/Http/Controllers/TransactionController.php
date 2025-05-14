@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BorrowedBook;
 use App\Models\Transaction;
+use App\Models\RecentlyReturnedBook;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+
     public function index()
     {
         $user = Auth::user();
@@ -32,12 +35,11 @@ class TransactionController extends Controller
             ->with('book')
             ->get();
 
-        // Fetch recently returned books
-        $returnedBooks = BorrowedBook::where('user_id', $user->id)
-            ->whereNotNull('returned_at')
+        // Fetch recently returned books from recently_returned_books table
+        $returnedBooks = RecentlyReturnedBook::where('user_id', $user->id)
             ->with('book')
             ->orderBy('returned_at', 'desc')
-            ->take(5)
+            ->take(100)
             ->get();
 
         // Calculate total due amount from late fees
@@ -47,7 +49,7 @@ class TransactionController extends Controller
         $paymentHistory = Transaction::where('user_id', $user->id)
             ->where('type', 'payment')
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(100)
             ->get();
 
         return view('transactions', compact('borrowedBooks', 'dueBooks', 'returnedBooks', 'dueAmount', 'paymentHistory'));

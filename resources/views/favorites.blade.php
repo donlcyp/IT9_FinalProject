@@ -1,4 +1,3 @@
-<!-- resources/views/favorites.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites - Grand Archives</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -32,38 +32,34 @@
             position: relative;
         }
 
-        /* Navigation styles (consistent with previous views) */
-        .navigation {
+        /* Hover area for desktop (Added from Catalog/Transactions) */
+        .hover-area {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100vh;
+            background: transparent;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        /* Sidebar styles (Updated to match Catalog/Transactions) */
+        .sidebar {
             width: 250px;
-            background: #121246;
+            background: rgba(18, 18, 70, 0.9);
+            backdrop-filter: blur(10px);
             height: 100vh;
             position: fixed;
-            left: -250px;
+            left: -280px;
             top: 0;
             transition: left 0.3s ease-in-out;
             z-index: 10;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
         }
 
-        .navigation.active {
+        .sidebar[aria-expanded="true"] {
             left: 0;
-        }
-
-        .menu-button {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-            cursor: pointer;
-            z-index: 20;
-            color: #121246;
-            font-size: 28px;
-            background: transparent;
-            border: none;
-            transition: color 0.2s;
-        }
-
-        .menu-button:hover {
-            color: #121246;
         }
 
         /* Main content styles */
@@ -71,35 +67,42 @@
             flex: 1;
             background: #f0f0e4;
             min-height: 100vh;
-            padding-left: 0px;
+            padding-left: 0;
             transition: padding-left 0.3s ease-in-out;
+            position: relative;
+            z-index: 1;
         }
 
-        .favorites-page.nav-active {
-            padding-left: 310px;
+        .favorites-page[aria-nav-expanded="true"] {
+            padding-left: 250px; /* Updated to match sidebar width */
         }
 
         .rectangle-5 {
             background: #ded9c3;
             width: 100%;
             height: 80px;
-            position: fixed; /* Kept as fixed per original design */
+            position: fixed;
             left: 0;
             top: 0;
             border-bottom: 2px solid #b5835a;
             z-index: 1;
-            display: flex; /* Added to center the favorites text */
-            justify-content: center; /* Horizontally center */
-            align-items: center; /* Vertically center */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .favorites {
             color: #121246;
             text-align: center;
             font-family: "Inter-Regular", sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 600;
-            z-index: 2;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.3);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
         }
 
         /* Search bar styles */
@@ -195,12 +198,21 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .favorites-page {
-                padding-left: 50px;
+            .hover-area {
+                display: none; /* Disable hover area on mobile */
             }
 
-            .favorites-page.nav-active {
-                padding-left: 260px;
+            .sidebar {
+                width: 240px;
+                left: -240px;
+            }
+
+            .favorites-page[aria-nav-expanded="true"] {
+                padding-left: 0; /* No shift on mobile */
+            }
+
+            .rectangle-5 {
+                height: 70px;
             }
 
             .favorites {
@@ -230,17 +242,13 @@
         }
 
         @media (max-width: 480px) {
-            .navigation {
+            .sidebar {
                 width: 200px;
+                left: -200px;
             }
 
-            .favorites-page.nav-active {
-                padding-left: 220px;
-            }
-
-            .menu-button {
-                left: 10px;
-                top: 15px;
+            .rectangle-5 {
+                height: 60px;
             }
 
             .rectangle-7 {
@@ -255,13 +263,11 @@
 </head>
 <body>
     <div class="favorites-container">
-        <div class="navigation">
+        <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
+        <div class="sidebar" aria-expanded="false">
             @include('layouts.navigation')
         </div>
-        <div class="favorites-page">
-            <button class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
+        <div class="favorites-page" aria-nav-expanded="false">
             <div class="rectangle-5">
                 <div class="favorites">FAVORITES</div>
             </div>
@@ -273,15 +279,14 @@
             </div>
             <div class="favorites-content">
                 <div class="book-grid">
-@foreach($favorites as $book)
-    <div class="book-card" style="position: relative;">
-        <a href="{{ route('books.show', $book->id) }}" style="color: inherit; text-decoration: none;">
-            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}">
-            <p>{{ $book->title }}</p>
-        </a>
-    </div>
-@endforeach
-                    <!-- Placeholder for when there are no favorites -->
+                    @foreach($favorites as $book)
+                        <div class="book-card" style="position: relative;">
+                            <a href="{{ route('books.show', $book->id) }}" style="color: inherit; text-decoration: none;">
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}">
+                                <p>{{ $book->title }}</p>
+                            </a>
+                        </div>
+                    @endforeach
                     @if($favorites->isEmpty())
                         <p style="text-align: center; color: #121246; grid-column: 1 / -1;">No favorite books yet.</p>
                     @endif
@@ -291,16 +296,52 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.menu-button');
-            const navigation = document.querySelector('.navigation');
+            const hoverArea = document.querySelector('.hover-area');
+            const sidebar = document.querySelector('.sidebar');
             const favoritesPage = document.querySelector('.favorites-page');
 
-            menuButton.addEventListener('click', function() {
-                navigation.classList.toggle('active');
-                favoritesPage.classList.toggle('nav-active');
-            });
+            // Desktop hover navigation
+            if (hoverArea) {
+                hoverArea.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'true');
+                        favoritesPage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
 
-            // Basic search functionality
+                hoverArea.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768 && !sidebar.matches(':hover')) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        favoritesPage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                sidebar.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'true');
+                        favoritesPage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
+
+                sidebar.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        favoritesPage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                // Keyboard accessibility for hover area
+                hoverArea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' && window.innerWidth > 768) {
+                        e.preventDefault();
+                        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+                        sidebar.setAttribute('aria-expanded', !isExpanded);
+                        favoritesPage.setAttribute('aria-nav-expanded', !isExpanded);
+                    }
+                });
+            }
+
+            // Search functionality (unchanged)
             const searchInput = document.querySelector('.search-input');
             const bookCards = document.querySelectorAll('.book-card');
 

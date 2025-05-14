@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
-        /* Reuse styles from profile.blade.php */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -18,129 +17,82 @@
         body, html {
             height: 100%;
             font-family: "Inter-Regular", sans-serif;
-            background: #121246;
-            color: #fff;
+            background: #f0f0e4;
+            color: #121246;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .profile-container {
             display: flex;
+            justify-content: center;
             width: 100%;
             min-height: 100vh;
-            position: relative;
-        }
-
-        .navigation {
-            width: 250px;
-            background: #121246;
-            height: 100vh;
-            position: fixed;
-            left: -250px;
-            top: 0;
-            transition: left 0.3s ease-in-out;
-            z-index: 10;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .navigation.active {
-            left: 0;
-        }
-
-        .menu-button {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-            cursor: pointer;
-            z-index: 20;
-            color: #d4a373;
-            font-size: 28px;
-            background: transparent;
-            border: none;
-            transition: color 0.2s;
-        }
-
-        .menu-button:hover {
-            color: #b5835a;
-        }
-
-        .profile-page {
-            flex: 1;
-            background: #f0f0e4;
-            min-height: 100vh;
-            padding-left: 0px;
-            transition: padding-left 0.3s ease-in-out;
-            overflow-y: auto;
-        }
-
-        .profile-page.nav-active {
-            padding-left: 310px;
-        }
-
-        .rectangle-5 {
-            background: #ded9c3;
-            width: 100%;
-            height: 80px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            border-bottom: 2px solid #b5835a;
-            z-index: 1;
-        }
-
-        .profile {
-            color: #121246;
-            text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 28px;
-            font-weight: 600;
-            position: fixed; /* Changed to fixed to stay at the top */
-            top: 25px; /* Aligns with original positioning */
-            left: 0;
-            right: 0;
-            z-index: 2; /* Above rectangle-5 but below menu-button */
-            display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center;
+            padding-top: 80px;
         }
 
         .profile-content {
-            background: #baba82;
-            border-radius: 12px;
+            background: #ded9c3;
+            border-radius: 15px;
             width: 100%;
-            max-width: 1203px;
-            margin: 100px auto 40px;
-            padding: 40px;
+            max-width: 700px;
+            margin: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-header-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            text-align: center;
+        }
+
+        .profile-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #121246;
+            background: linear-gradient(to right, #121246, #b5835a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .form-grid {
+            display: grid;
             gap: 20px;
         }
 
         .form-group {
-            width: 100%;
-            max-width: 600px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .form-group label {
+            font-size: 16px;
+            font-weight: 500;
             color: #121246;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 18px;
-            font-weight: 600;
         }
 
         .form-group input,
         .form-group textarea {
-            width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #b5835a;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 16px;
-            color: #121246;
+            font-size: 14px;
             background: #fff;
+            color: #121246;
         }
 
         .form-group textarea {
@@ -148,105 +100,111 @@
             min-height: 100px;
         }
 
-        .form-group img.profile-picture {
-            border-radius: 85.5px;
-            width: 171px;
-            height: 171px;
+        .profile-picture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
-pure css solution to make an element stick to top of page when scrolling            margin: 0 auto;
-            display: block;
+            border: 4px solid #b5835a;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+        }
+
+        .change-picture-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #b5835a;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .change-picture-button:hover {
+            background: #9a6b47;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(181, 131, 90, 0.3);
+        }
+
+        .change-picture-button input[type="file"] {
+            display: none;
         }
 
         .button-group {
             display: flex;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .save-button,
-        .cancel-button {
-            padding: 10px 20px;
+        .update-button,
+        .discard-button {
+            padding: 12px 25px;
             border-radius: 8px;
-            color: #ffffff;
-            font-family: "Inter-Regular", sans-serif;
+            color: #fff;
             font-size: 16px;
-            font-weight: 400;
-            text-align: center;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s ease;
             border: none;
+            transition: all 0.3s ease;
         }
 
-        .save-button {
-            background: #6aa933;
+        .update-button {
+            background: #121246;
         }
 
-        .save-button:hover {
-            background: #5a8b2a;
+        .update-button:hover {
+            background: #0d0e33;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(18, 18, 70, 0.3);
         }
 
-        .cancel-button {
-            background: #c22d2d;
+        .discard-button {
+            background: #b5835a;
         }
 
-        .cancel-button:hover {
-            background: #a82525;
+        .discard-button:hover {
+            background: #9a6b47;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(181, 131, 90, 0.3);
         }
 
         .error-message {
             color: #c22d2d;
             font-size: 14px;
-            margin-top: 5px;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
-            .profile-page {
-                padding-left: 50px;
-            }
-
-            .profile-page.nav-active {
-                padding-left: 260px;
-            }
-
-            .profile {
-                font-size: 22px;
-                top: 28px; /* Slightly adjusted for smaller screens */
-            }
-
             .profile-content {
-                max-width: 600px;
                 padding: 20px;
             }
 
-            .form-group img.profile-picture {
+            .profile-picture {
                 width: 120px;
                 height: 120px;
-                border-radius: 60px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navigation {
-                width: 200px;
             }
 
-            .profile-page.nav-active {
-                padding-left: 220px;
-            }
-
-            .menu-button {
-                left: 10px;
-                top: 15px;
-            }
-
-            .profile-content {
-                max-width: 400px;
-            }
-
-            .form-group img.profile-picture {
-                width: 100px;
-                height: 100px;
-                border-radius: 50px;
+            .form-group input,
+            .form-group textarea {
+                padding: 10px;
             }
 
             .button-group {
@@ -255,45 +213,46 @@ pure css solution to make an element stick to top of page when scrolling        
             }
         }
 
-        .images-1-1 {
-            border-radius: 85.5px;
-            width: 171px;
-            height: 171px;
-            object-fit: cover;
-            z-index: 0; /* Changed from 5 to 0 to ensure it stays below rectangle-5 */
-            position: relative;
-            display: block; /* Ensure it’s visible */
-            margin: 0 auto; /* Center the image */
+        @media (max-width: 480px) {
+            .profile-content {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile-header h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="profile-container">
-        <div class="navigation">
-            @include('layouts.navigation')
-        </div>
-        <div class="profile-page">
-            <button class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div class="rectangle-5"></div>
-            <div class="profile">EDIT PROFILE</div>
-            <div class="profile-content">
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PATCH')
-
-                    <!-- Profile Picture -->
-                    <div class="form-group">
-                        <label for="profile_picture">Profile Picture</label>
-                        <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/logo1.png') }}" alt="Profile Picture" class="images-1-1" style="display: block; margin: 0 auto;"/>
+        <div class="profile-content">
+            <div class="profile-header-container">
+                <div class="profile-header">
+                    <h1>EDIT PROFILE</h1>
+                </div>
+                <div class="profile-picture-container">
+                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/logo1.png') }}" alt="Profile Picture" class="profile-picture">
+                    <label class="change-picture-button">
+                        Change Picture
                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
-                        @error('profile_picture')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    </label>
+                    @error('profile_picture')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
 
-                    <!-- Name -->
+                <div class="form-grid">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" required>
@@ -302,7 +261,6 @@ pure css solution to make an element stick to top of page when scrolling        
                         @enderror
                     </div>
 
-                    <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" value="{{ old('email', Auth::user()->email) }}" required>
@@ -311,7 +269,6 @@ pure css solution to make an element stick to top of page when scrolling        
                         @enderror
                     </div>
 
-                    <!-- Contact Number -->
                     <div class="form-group">
                         <label for="contact_no">Contact Number</label>
                         <input type="text" name="contact_no" id="contact_no" value="{{ old('contact_no', Auth::user()->contact_no) }}">
@@ -320,7 +277,6 @@ pure css solution to make an element stick to top of page when scrolling        
                         @enderror
                     </div>
 
-                    <!-- Address -->
                     <div class="form-group">
                         <label for="address">Address</label>
                         <textarea name="address" id="address">{{ old('address', Auth::user()->address) }}</textarea>
@@ -328,27 +284,14 @@ pure css solution to make an element stick to top of page when scrolling        
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
+                </div>
 
-                    <!-- Buttons -->
-                    <div class="button-group">
-                        <button type="submit" class="save-button">Save Changes</button>
-                        <a href="{{ route('user.profile') }}" class="cancel-button">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                <div class="button-group">
+                    <button type="submit" class="update-button">Update Profile</button>
+                    <a href="{{ route('user.profile') }}" class="discard-button">Discard</a>
+                </div>
+            </form>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.menu-button');
-            const navigation = document.querySelector('.navigation');
-            const profilePage = document.querySelector('.profile-page');
-
-            menuButton.addEventListener('click', function() {
-                navigation.classList.toggle('active');
-                profilePage.classList.toggle('nav-active');
-            });
-        });
-    </script>
 </body>
 </html>

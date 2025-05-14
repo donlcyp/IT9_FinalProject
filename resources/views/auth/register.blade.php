@@ -27,56 +27,67 @@
         .sign-up-page {
             background: #f0f0e4;
             min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            font-family: "Inter-Regular", sans-serif;
         }
+
         .frame-rectangle-3 {
-            width: 430px;
-            padding: 40px 20px; /* Added padding for internal spacing */
-            position: relative;
-            margin: 120px auto 20px; /* Adjusted for better flow */
+            width: min(90%, 430px);
+            padding: 1.5rem;
+            margin: 1rem;
             border: 2px solid #b5835a;
             border-radius: 12px;
             background: #ded9c3;
+            box-shadow: 0 8px 24px rgba(181, 131, 90, 0.1);
+            transition: box-shadow 0.3s ease;
         }
+
+        .frame-rectangle-3:hover {
+            box-shadow: 0 20px 48px rgba(181, 131, 90, 0.4); /* Hover shadow for lift illusion */
+        }
+
         .form-group {
-            width: 304px;
-            margin: 0 auto 25px; /* Increased spacing */
+            width: min(100%, 304px);
+            margin: 0 auto 1.25rem;
             position: relative;
         }
+
         .textbox {
             background: #d9d9d9;
             width: 100%;
-            height: 43px;
-            padding: 10px;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 16px;
+            height: 2.5rem;
+            padding: 0.5rem;
+            font-size: 0.9rem;
             color: #121246;
             border-radius: 8px;
             display: block;
-            outline: none; 
+            outline: none;
         }
+
         .textbox:focus {
             border: 2px solid #b5835a;
+            box-shadow: 0 0 0 3px rgba(181, 131, 90, 0.2);
         }
+
         .form-group label {
             color: #121246;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 14px;
+            font-size: 0.75rem;
             font-weight: 400;
             position: absolute;
-            left: 10px;
-            top: -20px;
+            left: 0.5rem;
+            top: -1rem;
         }
+
         .component-2 {
-            width: 160px;
-            height: 49px;
+            width: min(100%, 160px);
+            height: 2.5rem;
+            margin: 1rem auto 0;
             position: relative;
-            margin: 20px auto 0;
         }
+
         .rectangle-62 {
             background: #b5835a;
             border-radius: 10px;
@@ -85,141 +96,180 @@
             position: absolute;
             transition: background 0.2s ease;
         }
+
         .create-btn {
             color: #121246;
             text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 24px;
+            font-size: 1.25rem;
             font-weight: 400;
             width: 100%;
             height: 100%;
-            position: relative; /* Changed from absolute for better layering */
+            position: relative;
             cursor: pointer;
-            z-index: 1; /* Ensure button text is above rectangle */
+            z-index: 1;
         }
+
         .component-2:hover .rectangle-62 {
-            background: rgba(181, 131, 90, 0.8); /* Hover effect on rectangle */
+            background: rgba(181, 131, 90, 0.8);
         }
+
         .login-signup {
             color: #121246;
             text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 32px;
+            font-size: 1.5rem;
             font-weight: 600;
-            margin: 20px 0; /* Static positioning */
+            margin: 1rem 0;
         }
-        .frame-rectangle-2 {
-            width: 100%;
-            height: 107px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-bottom: 2px solid #b5835a;
-            background: #ded9c3;
-        }
-        .header-container {
-            position: absolute;
-            left: 82px;
-            top: 28px;
-            display: flex;
-            align-items: center;
-        }
+
         .logo {
-            width: 60px;
+            width: 80px;
             height: auto;
-            margin-right: 10px; /* Space between logo and text */
+            margin: 0 auto 0.75rem;
+            display: block;
         }
+
         .grand-archives2 {
-            color: #121246;
-            text-align: left;
-            font-family: "JacquesFrancoisShadow-Regular", sans-serif;
-            font-size: 40px;
+            color: #0e0f3a; /* Fallback color */
+            text-align: center;
+            font-family: "JacquesFrancoisShadow-Regular", "Cinzel Decorative", serif;
+            font-size: 1.5rem;
             font-weight: 400;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.7);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
         }
+
         .login-link-container {
-            width: 100px;
-            height: 30px;
-            margin: 20px auto; /* Static positioning */
+            width: 100%;
+            margin: 0.75rem auto;
+            text-align: center;
         }
+
         .login-link {
             color: #121246;
-            text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 16px;
+            font-size: 0.75rem;
             font-weight: 400;
-            width: 100%;
-            height: 100%;
             display: block;
             cursor: pointer;
         }
+
         .login-link:hover {
             text-decoration: underline;
         }
+
         .error-message {
             color: #c22d2d;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 14px;
+            font-size: 0.75rem;
             position: absolute;
-            left: 10px;
-            bottom: -20px;
-            width: 100%; /* Ensure it wraps properly */
+            left: 0.5rem;
+            bottom: -1rem;
+            width: 100%;
         }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .frame-rectangle-3 {
                 width: 90%;
-                padding: 30px 15px;
+                padding: 1rem;
             }
             .form-group {
                 width: 100%;
             }
-            .header-container {
-                left: 20px;
-            }
             .logo {
-                width: 50px; /* Slightly smaller logo on medium screens */
+                width: 70px;
             }
             .grand-archives2 {
-                font-size: 32px;
+                font-size: 1.25rem;
             }
         }
 
         @media (max-width: 480px) {
             .frame-rectangle-3 {
                 width: 95%;
-                padding: 20px 10px;
+                padding: 0.75rem;
             }
             .form-group {
                 width: 90%;
-                margin-bottom: 30px; /* Extra space for errors */
+                margin-bottom: 1rem;
             }
             .login-signup {
-                font-size: 24px;
+                font-size: 1.25rem;
             }
             .create-btn {
-                font-size: 20px;
-            }
-            .header-container {
-                left: 10px;
+                font-size: 1rem;
             }
             .logo {
-                width: 40px; /* Even smaller logo on small screens */
+                width: 60px;
             }
             .grand-archives2 {
-                font-size: 24px;
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            .textbox {
+                height: 2rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Ensure content fits on very short screens */
+        @media (max-height: 600px) {
+            .frame-rectangle-3 {
+                padding: 0.5rem;
+                margin: 0.5rem;
+            }
+            .logo {
+                width: 50px;
+                margin-bottom: 0.5rem;
+            }
+            .grand-archives2 {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+            .login-signup {
+                font-size: 1rem;
+                margin: 0.5rem 0;
+            }
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+            .textbox {
+                height: 1.8rem;
+                padding: 0.3rem;
+                font-size: 0.8rem;
+            }
+            .form-group label {
+                font-size: 0.7rem;
+                top: -0.9rem;
+            }
+            .error-message {
+                font-size: 0.7rem;
+                bottom: -0.9rem;
+            }
+            .component-2 {
+                height: 2rem;
+                margin: 0.5rem auto;
+            }
+            .create-btn {
+                font-size: 0.9rem;
+            }
+            .login-link-container {
+                margin: 0.5rem auto;
+            }
+            .login-link {
+                font-size: 0.7rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="sign-up-page">
-        <div class="frame-rectangle-2"></div>
-        <div class="header-container">
-            <img src="/images/logo1.png" alt="Grand Archives Logo" class="logo">
-            <div class="grand-archives2">GRAND ARCHIVES</div>
-        </div>
         <div class="frame-rectangle-3">
+            <img src="{{ asset('images/logo1.png') }}" alt="Grand Archives Logo" class="logo">
+            <div class="grand-archives2">GRAND ARCHIVES</div>
             <div class="login-signup">SIGNUP</div>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
@@ -227,28 +277,28 @@
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" class="textbox" placeholder="Name" value="{{ old('name') }}" required>
                     @error('name')
-                        <span revived-class="error-message">{{ $message }}</span>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" class="textbox" placeholder="Email" value="{{ old('email') }}" required>
                     @error('email')
-                        <span revived-class="error-message">{{ $message }}</span>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" class="textbox" placeholder="Password" required>
                     @error('password')
-                        <span revived-class="error-message">{{ $message }}</span>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="password_confirmation">Confirm Password</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" class="textbox" placeholder="Confirm Password" required>
                     @error('password_confirmation')
-                        <span revived-class="error-message">{{ $message }}</span>
+                        <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="component-2">
@@ -257,7 +307,7 @@
                 </div>
             </form>
             <div class="login-link-container">
-                <a href="{{ route('login') }}" class="login-link">Already have a Account?</a>
+                <a href="{{ route('login') }}" class="login-link">Already have an account?</a>
             </div>
         </div>
     </div>

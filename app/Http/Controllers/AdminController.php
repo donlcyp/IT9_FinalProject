@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+use App\Models\RecentlyReturnedBook;
+
 class AdminController extends Controller
 {
     public function __construct()
@@ -166,6 +168,16 @@ class AdminController extends Controller
                     'action' => 'stock_in',
                     'performed_by' => Auth::user()->email,
                 ]);
+
+                // Insert into recently_returned_books table
+                RecentlyReturnedBook::updateOrCreate(
+                    ['borrowed_book_id' => $borrowedBook->id],
+                    [
+                        'user_id' => $borrowedBook->user_id,
+                        'book_id' => $book->id,
+                        'returned_at' => now(),
+                    ]
+                );
             }
 
             $borrowedBook->update([

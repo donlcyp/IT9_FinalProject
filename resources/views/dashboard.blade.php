@@ -17,14 +17,14 @@
 
         body, html {
             height: 100%;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: #121246;
-            color: #fff;
+            color: #121246;
             overflow-x: hidden;
         }
 
         .fa-star {
-            font-size: 18px;
+            font-size: 0.9rem;
             color: #ccc;
         }
 
@@ -39,38 +39,63 @@
             position: relative;
         }
 
+        /* Mobile Navigation Toggle Button */
+        .mobile-nav-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem; /* Positioned on the right */
+            background: #b5835a;
+            color: #fff;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav-toggle:hover {
+            background: #8c5f3f;
+        }
+
         /* Navigation styles */
         .navigation {
             width: 250px;
             background: #ded9c3;
             height: 100vh;
             position: fixed;
-            left: -250px; /* Hidden by default */
+            left: 0;
             top: 0;
-            transition: left 0.3s ease-in-out;
+            transform: translateX(-100%); /* Hidden off-screen to the left */
+            transition: transform 0.3s ease-in-out;
             z-index: 10;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
+            border-radius: 0 12px 12px 0;
         }
 
-        .navigation.active {
-            left: 0; /* Show when active */
+        .navigation[aria-expanded="true"] {
+            transform: translateX(0); /* Slide in from left */
         }
 
-        .menu-button {
+        /* Hover area for desktop */
+        .hover-area {
             position: fixed;
-            left: 20px;
-            top: 20px;
-            cursor: pointer;
-            z-index: 20;
-            color: #121246;
-            font-size: 28px;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100vh;
             background: transparent;
-            border: none;
-            transition: color 0.2s;
+            z-index: 20;
+            cursor: pointer;
         }
 
-        .menu-button:hover {
-            color: #121246;
+        .hover-area:hover + .navigation {
+            transform: translateX(0);
+        }
+
+        .hover-area:hover ~ .home-page {
+            padding-left: 17rem;
         }
 
         /* Main content styles */
@@ -78,49 +103,59 @@
             flex: 1;
             background: #f0f0e4;
             min-height: 100vh;
-            padding-left: 60px; /* Space for menu button */
-            transition: padding-left 0.3s ease-in-out;
+            padding: 1rem;
+            transition: padding-left 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+            position: relative;
+            z-index: 1;
         }
 
-        .home-page.nav-active {
-            padding-left: 310px; /* Shift content when nav is active */
+        .home-page[aria-nav-expanded="true"] {
+            margin-left: 250px; /* Push content to the right when nav is open on mobile */
+            padding-left: 1rem; /* Maintain inner padding */
         }
 
-        .rectangle-5 {
-            background: #ded9c3;
-            width: 100%;
-            height: 80px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            border-bottom: 2px solid #b5835a;
-            z-index: 15; /* Increased to stay above book cards */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Logo and GRAND ARCHIVES */
+        .logo {
+            width: 80px;
+            height: auto;
+            margin: 1rem auto 0.5rem;
+            display: block;
         }
 
-        .home-title {
-            color: #121246;
+        .grand-archives2 {
+            color: #0e0f3a;
             text-align: center;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 28px;
-            font-weight: 600;
-            z-index: 2;
+            font-family: "JacquesFrancoisShadow-Regular", "Cinzel Decorative", serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.7);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .grand-archives2:hover {
+            transform: scale(1.05);
         }
 
         /* Messages */
         .message {
             text-align: center;
-            padding: 10px;
-            margin: 100px auto 20px;
+            padding: 0.75rem;
+            margin: 0.5rem auto;
             max-width: 1100px;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
+
         .message.success {
             background: #6aa933;
             color: #fff;
         }
+
         .message.error {
             background: #ff3333;
             color: #fff;
@@ -130,223 +165,353 @@
         .overdue-notice {
             background: #ff6b6b;
             color: #fff;
-            padding: 10px;
-            border-radius: 4px;
+            padding: 0.75rem;
+            border-radius: 8px;
             text-align: center;
-            margin: 100px auto 20px;
+            margin: 0.5rem auto;
             max-width: 1100px;
+            font-size: 0.9rem;
         }
 
         /* Section headers */
         .trending, .trending2, .trending3, .borrowed-books {
             color: #121246;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 24px;
-            font-weight: 400;
-            margin: 20px 0 10px;
-            padding-left: 20px;
+            font-size: 40px;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+            padding-left: 1rem;
         }
 
         .trending {
-            margin-top: 120px; /* Space below header */
+            margin-top: 0.5rem;
         }
 
-        /* Book container styles */
+        /* Carousel wrapper for arrows */
+        .carousel-wrapper {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Book container styles (Netflix-like carousel) */
         .book-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            margin-top: 80px; /* Ensure content starts below fixed header */
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
 
+        .book-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .book-container {
+            scroll-snap-type: x proximity;
+        }
+
+        .book-container > * {
+            scroll-snap-align: start;
+        }
+
+        /* Book card styles */
         .book-card {
-            width: 100%;
-            height: 300px; /* Increased to accommodate quantity and button */
-            background: #b5835a;
-            border-radius: 15px;
+            flex: 0 0 220px;
+            height: 320px;
+            background: #ded9c3;
+            border-radius: 12px;
             border: 1px solid #b5835a;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
-            z-index: 5; /* Lower than rectangle-5 */
+            box-shadow: 0 4px 12px rgba(181, 131, 90, 0.1);
         }
 
         .book-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(181, 131, 90, 0.3);
         }
 
         .book-card img {
             width: 100%;
-            height: 180px;
+            height: 220px;
             object-fit: cover;
-            border-radius: 10px 10px 0 0;
+            border-radius: 12px 12px 0 0;
         }
 
         .book-card .book-info {
-            padding: 10px;
+            padding: 0.5rem;
             text-align: center;
         }
 
         .book-card p {
             color: #121246;
-            font-family: "Inter-Regular", sans-serif;
-            font-size: 14px;
+            font-size: 0.8rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 5px;
+            margin-bottom: 0.2rem;
         }
 
         .book-card .quantity {
-            color: #fff;
-            font-size: 12px;
-            margin-bottom: 5px;
+            color: #121246;
+            font-size: 0.7rem;
+            margin-bottom: 0.2rem;
         }
 
         .book-card .action-button {
             background: #121246;
             color: #fff;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 12px;
-            transition: background 0.2s;
+            font-size: 0.7rem;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
 
         .book-card .action-button:hover {
             background: #1e2a78;
+            transform: scale(1.05);
         }
 
         .book-card .out-of-stock {
             color: #ff6b6b;
-            font-size: 12px;
+            font-size: 0.7rem;
             font-style: italic;
         }
 
-        /* Borrowed books table styles */
-        .borrowed-table {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            border-collapse: collapse;
-            background: #ded9c3;
-            border-radius: 8px;
-            overflow: hidden;
-            padding: 20px;
+        /* Carousel navigation arrows */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(181, 131, 90, 0.8);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, background 0.2s ease;
+            z-index: 5;
         }
 
-        .borrowed-table th, .borrowed-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #b5835a;
+        .carousel-arrow:hover {
+            background: #b5835a;
         }
 
-        .borrowed-table th {
-            background: #d4a373;
-            color: #121246;
-            font-weight: 600;
+        .carousel-wrapper:hover .carousel-arrow {
+            opacity: 1;
         }
 
-        .borrowed-table td {
-            color: #121246;
+        .carousel-arrow.left {
+            left: 10px;
         }
 
-        .overdue {
-            color: #ff6b6b;
-            font-weight: bold;
+        .carousel-arrow.right {
+            right: 10px;
+        }
+
+        .carousel-arrow:focus {
+            outline: 2px solid #121246;
+            outline-offset: 2px;
         }
 
         /* Bookmark icon styles */
         .bookmark-icon {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 24px;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
             z-index: 10;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
         .bookmark-icon.favorited {
-            color: #b5835a; /* Filled color for favorited */
+            color: #b5835a;
         }
 
         .bookmark-icon:not(.favorited) {
-            color: #d4a373; /* Hollow color for non-favorited */
+            color: #d4a373;
+        }
+
+        .bookmark-icon:hover {
+            transform: scale(1.2);
         }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            .navigation {
+                width: 250px;
+                transform: translateX(-100%); /* Hidden off left */
+            }
+
+            .navigation[aria-expanded="true"] {
+                transform: translateX(0); /* Slide in from left */
+            }
+
+            .hover-area {
+                display: none;
+            }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
             .home-page {
-                padding-left: 50px;
+                padding: 0.5rem;
+                transition: margin-left 0.3s ease-in-out;
             }
 
-            .home-page.nav-active {
-                padding-left: 260px;
+            .home-page[aria-nav-expanded="true"] {
+                margin-left: 250px; /* Push content to the right when nav is open */
             }
 
-            .home-title {
-                font-size: 22px;
+            .grand-archives2 {
+                font-size: 1.25rem;
             }
 
-            .trending, .trending2, .trending3, .borrowed-books {
-                font-size: 20px;
-            }
-
-            .book-container {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            .logo {
+                width: 70px;
             }
 
             .book-card {
-                height: 250px;
+                flex: 0 0 160px;
+                height: 260px;
             }
 
             .book-card img {
-                height: 130px;
+                height: 180px;
             }
 
             .book-card p {
-                font-size: 12px;
+                font-size: 0.8rem;
             }
 
-            .book-card .quantity, .book-card .action-button, .book-card .out-of-stock {
-                font-size: 10px;
+            .book-card .quantity,
+            .book-card .action-button,
+            .book-card .out-of-stock {
+                font-size: 0.7rem;
             }
 
-            .borrowed-table th, .borrowed-table td {
-                padding: 8px;
-                font-size: 14px;
+            .carousel-arrow {
+                width: 48px;
+                height: 48px;
+                opacity: 0.7;
+                display: flex;
+            }
+
+            .carousel-arrow i {
+                font-size: 1.2rem;
+            }
+
+            .trending, .trending2, .trending3, .borrowed-books {
+                font-size: 1.5rem;
+                margin: 0.75rem 0 0.5rem;
+            }
+
+            .message, .overdue-notice {
+                font-size: 0.85rem;
+                padding: 0.5rem;
             }
 
             .bookmark-icon {
-                font-size: 20px;
+                font-size: 1.2rem;
+                padding: 0.5rem;
             }
         }
 
         @media (max-width: 480px) {
-            .navigation {
-                width: 200px;
+            .book-card {
+                flex: 0 0 140px;
+                height: 240px;
             }
 
-            .home-page.nav-active {
-                padding-left: 220px;
+            .book-card img {
+                height: 160px;
             }
 
-            .menu-button {
-                left: 10px;
-                top: 15px;
+            .grand-archives2 {
+                font-size: 1rem;
             }
 
-            .borrowed-table th, .borrowed-table td {
-                padding: 6px;
-                font-size: 12px;
+            .logo {
+                width: 60px;
             }
 
-            .bookmark-icon {
-                font-size: 18px;
+            .book-card p {
+                font-size: 0.7rem;
+            }
+
+            .book-card .quantity,
+            .book-card .action-button,
+            .book-card .out-of-stock {
+                font-size: 0.6rem;
+            }
+
+            .trending, .trending2, .trending3, .borrowed-books {
+                font-size: 1.25rem;
+            }
+
+            .carousel-arrow {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Ensure content fits on short screens */
+        @media (max-height: 600px) {
+            .home-page {
+                padding: 0.5rem;
+            }
+
+            .logo {
+                width: 50px;
+                margin: 0.5rem auto 0.25rem;
+            }
+
+            .grand-archives2 {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .trending, .trending2, .trending3, .borrowed-books {
+                font-size: 1rem;
+                margin: 0.5rem 0 0.25rem;
+            }
+
+            .book-card {
+                flex: 0 0 140px;
+                height: 220px;
+            }
+
+            .book-card img {
+                height: 140px;
+            }
+
+            .book-card p {
+                font-size: 0.7rem;
+            }
+
+            .book-card .quantity,
+            .book-card .action-button,
+            .book-card .out-of-stock {
+                font-size: 0.6rem;
+            }
+
+            .message, .overdue-notice {
+                padding: 0.5rem;
+                margin: 0.25rem auto;
+                font-size: 0.8rem;
             }
         }
 
@@ -361,198 +526,326 @@
 </head>
 <body>
     <div class="home-container">
-        <div class="navigation">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="hover-area" role="button" aria-label="Open navigation menu" tabindex="0"></div>
+        <nav class="navigation" role="navigation" aria-label="Main navigation" aria-expanded="false">
             @include('layouts.navigation')
-        </div>
-        <div class="home-page">
-            <button class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div class="rectangle-5">
-                <div class="home-title">HOME</div>
-            </div>
-
-            <div style="margin: 20px auto; max-width: 1100px; background: #ded9c3; border-radius: 8px; padding: 15px; color: #121246; display: flex; align-items: center; gap: 10px;">
-                <span>My Ratings:</span>
-                <div style="display: flex; gap: 5px; font-size: 24px; color: #ffca08;">
-                    @php
-                        $roundedRating = round($averageRating);
-                    @endphp
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $roundedRating)
-                            <span class="fa fa-star checked"></span>
-                        @else
-                            <span class="fa fa-star"></span>
-                        @endif
-                    @endfor
-                </div>
-                <span>({{ $ratingCount }} ratings)</span>
-            </div>
-
+        </nav>
+        <main class="home-page" role="main" aria-nav-expanded="false">
+            <img src="{{ asset('images/logo1.png') }}" alt="Grand Archives Logo" class="logo" loading="lazy">
+            <div class="grand-archives2" role="heading" aria-level="1">GRAND ARCHIVES</div>
             @if(session('success'))
-                <div class="message success">{{ session('success') }}</div>
+                <div class="message success" role="alert">{{ session('success') }}</div>
             @endif
             @if(session('error'))
-                <div class="message error">{{ session('error') }}</div>
+                <div class="message error" role="alert">{{ session('error') }}</div>
             @endif
-
             @if($overdueCount > 0)
-                <div class="overdue-notice">
+                <div class="overdue-notice" role="alert">
                     You have {{ $overdueCount }} overdue book(s)! Please return them as soon as possible.
                 </div>
             @endif
-
             <!-- Trending Books -->
-            <div class="trending">Trending</div>
-            <div class="book-container">
-@forelse($books as $book)
-    <div class="book-card">
-        <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 8px; right: 8px; z-index: 10;">
-            @csrf
-            <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite">
-                <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
-            </button>
-        </form>
-        <a href="{{ route('books.show', $book->id) }}">
-            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}">
-        </a>
-        <div class="book-info">
-            <a href="{{ route('books.show', $book->id) }}">
-                <p>{{ $book->title }}</p>
-            </a>
-            <div style="display: flex; align-items: center; gap: 5px; color: #ffca08; font-size: 18px; margin-bottom: 5px;">
-                @php
-                    $roundedRating = round($book->average_rating);
-                @endphp
-                @for ($i = 1; $i <= 5; $i++)
-                    @if ($i <= $roundedRating)
-                        <span class="fa fa-star checked"></span>
-                    @else
-                        <span class="fa fa-star"></span>
-                    @endif
-                @endfor
-                <span style="color: #121246; font-size: 14px; margin-left: 8px;">({{ number_format($book->average_rating, 2) }}/5)</span>
+            <h2 class="trending">Trending</h2>
+            <div class="carousel-wrapper">
+                <button class="carousel-arrow left" aria-label="Scroll left" tabindex="0">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="book-container" role="region" aria-label="Trending books carousel">
+                    @forelse($books as $book)
+                        <div class="book-card" role="article">
+                            <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 0.5rem; right: 0.5rem; z-index: 10;">
+                                @csrf
+                                <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite" aria-label="Toggle favorite for {{ $book->title }}">
+                                    <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
+                                </button>
+                            </form>
+                            <a href="{{ route('books.show', $book->id) }}" aria-label="View details for {{ $book->title }}">
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" loading="lazy">
+                            </a>
+                            <div class="book-info">
+                                <a href="{{ route('books.show', $book->id) }}">
+                                    <p>{{ $book->title }}</p>
+                                </a>
+                                <div style="display: flex; align-items: center; gap: 0.2rem; color: #ffca08; font-size: 0.8rem; margin-bottom: 0.2rem; justify-content: center;">
+                                    @php
+                                        $roundedRating = round($book->average_rating);
+                                    @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $roundedRating)
+                                            <span class="fa fa-star checked" aria-hidden="true"></span>
+                                        @else
+                                            <span class="fa fa-star" aria-hidden="true"></span>
+                                        @endif
+                                    @endfor
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                </div>
+                                <div class="quantity">Available: {{ $book->quantity }}</div>
+                                @if($book->quantity > 0)
+                                    <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="action-button">Borrow</button>
+                                    </form>
+                                @else
+                                    <span class="out-of-stock">Out of Stock</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p style="color: #121246; padding: 1rem; flex: 0 0 auto;">No trending books available.</p>
+                    @endforelse
+                </div>
+                <button class="carousel-arrow right" aria-label="Scroll right" tabindex="0">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="quantity">Available: {{ $book->quantity }}</div>
-            @if($book->quantity > 0)
-                <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
-                    @csrf
-                </form>
-            @else
-                <span class="out-of-stock">Out of Stock</span>
-            @endif
-        </div>
-    </div>
-@empty
-    <p style="color: #121246; padding: 20px;">No trending books available.</p>
-@endforelse
-            </div>
-
             <!-- Top Books -->
-            <div class="trending2">Top Books</div>
-            <div class="book-container">
-@forelse($topBooks as $book)
-    <div class="book-card">
-        <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 8px; right: 8px; z-index: 10;">
-            @csrf
-            <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite">
-                <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
-            </button>
-        </form>
-        <a href="{{ route('books.show', $book->id) }}">
-            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}">
-        </a>
-        <div class="book-info">
-            <a href="{{ route('books.show', $book->id) }}">
-                <p>{{ $book->title }}</p>
-            </a>
-            <div style="display: flex; align-items: center; gap: 5px; color: #ffca08; font-size: 18px; margin-bottom: 5px;">
-                @php
-                    $roundedRating = round($book->average_rating);
-                @endphp
-                @for ($i = 1; $i <= 5; $i++)
-                    @if ($i <= $roundedRating)
-                        <span class="fa fa-star checked"></span>
-                    @else
-                        <span class="fa fa-star"></span>
-                    @endif
-                @endfor
-                <span style="color: #121246; font-size: 14px; margin-left: 8px;">({{ number_format($book->average_rating, 2) }}/5)</span>
+            <h2 class="trending2">Top Books</h2>
+            <div class="carousel-wrapper">
+                <button class="carousel-arrow left" aria-label="Scroll left" tabindex="0">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="book-container" role="region" aria-label="Top books carousel">
+                    @forelse($topBooks as $book)
+                        <div class="book-card" role="article">
+                            <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 0.5rem; right: 0.5rem; z-index: 10;">
+                                @csrf
+                                <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite" aria-label="Toggle favorite for {{ $book->title }}">
+                                    <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
+                                </button>
+                            </form>
+                            <a href="{{ route('books.show', $book->id) }}" aria-label="View details for {{ $book->title }}">
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" loading="lazy">
+                            </a>
+                            <div class="book-info">
+                                <a href="{{ route('books.show', $book->id) }}">
+                                    <p>{{ $book->title }}</p>
+                                </a>
+                                <div style="display: flex; align-items: center; gap: 0.2rem; color: #ffca08; font-size: 0.8rem; margin-bottom: 0.2rem; justify-content: center;">
+                                    @php
+                                        $roundedRating = round($book->average_rating);
+                                    @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $roundedRating)
+                                            <span class="fa fa-star checked" aria-hidden="true"></span>
+                                        @else
+                                            <span class="fa fa-star" aria-hidden="true"></span>
+                                        @endif
+                                    @endfor
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                </div>
+                                <div class="quantity">Available: {{ $book->quantity }}</div>
+                                @if($book->quantity > 0)
+                                    <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="action-button">Borrow</button>
+                                    </form>
+                                @else
+                                    <span class="out-of-stock">Out of Stock</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p style="color: #121246; padding: 1rem; flex: 0 0 auto;">No top books available.</p>
+                    @endforelse
+                </div>
+                <button class="carousel-arrow right" aria-label="Scroll right" tabindex="0">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="quantity">Available: {{ $book->quantity }}</div>
-            @if($book->quantity > 0)
-                <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
-                    @csrf
-                </form>
-            @else
-                <span class="out-of-stock">Out of Stock</span>
-            @endif
-        </div>
-    </div>
-@empty
-    <p style="color: #121246; padding: 20px;">No top books available.</p>
-@endforelse
-            </div>
-
             <!-- Most Read Books -->
-            <div class="trending3">Most Read</div>
-            <div class="book-container">
-@forelse($mostReadBooks as $book)
-    <div class="book-card">
-        <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 8px; right: 8px; z-index: 10;">
-            @csrf
-            <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite">
-                <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
-            </button>
-        </form>
-        <a href="{{ route('books.show', $book->id) }}">
-            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}">
-        </a>
-        <div class="book-info">
-            <a href="{{ route('books.show', $book->id) }}">
-                <p>{{ $book->title }}</p>
-            </a>
-            <div style="display: flex; align-items: center; gap: 5px; color: #ffca08; font-size: 18px; margin-bottom: 5px;">
-                @php
-                    $roundedRating = round($book->average_rating);
-                @endphp
-                @for ($i = 1; $i <= 5; $i++)
-                    @if ($i <= $roundedRating)
-                        <span class="fa fa-star checked"></span>
-                    @else
-                        <span class="fa fa-star"></span>
-                    @endif
-                @endfor
-                <span style="color: #121246; font-size: 14px; margin-left: 8px;">({{ number_format($book->average_rating, 2) }}/5)</span>
+            <h2 class="trending3">Most Read</h2>
+            <div class="carousel-wrapper">
+                <button class="carousel-arrow left" aria-label="Scroll left" tabindex="0">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="book-container" role="region" aria-label="Most read books carousel">
+                    @forelse($mostReadBooks as $book)
+                        <div class="book-card" role="article">
+                            <form action="{{ route('favorites.toggle', $book) }}" method="POST" style="position: absolute; top: 0.5rem; right: 0.5rem; z-index: 10;">
+                                @csrf
+                                <button type="submit" class="bookmark-icon {{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'favorited' : '' }}" style="background: none; border: none; padding: 0; cursor: pointer;" title="Toggle favorite" aria-label="Toggle favorite for {{ $book->title }}">
+                                    <i class="{{ auth()->user() && auth()->user()->favorites->contains($book->id) ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark' }}"></i>
+                                </button>
+                            </form>
+                            <a href="{{ route('books.show', $book->id) }}" aria-label="View details for {{ $book->title }}">
+                                <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" loading="lazy">
+                            </a>
+                            <div class="book-info">
+                                <a href="{{ route('books.show', $book->id) }}">
+                                    <p>{{ $book->title }}</p>
+                                </a>
+                                <div style="display: flex; align-items: center; gap: 0.2rem; color: #ffca08; font-size: 0.8rem; margin-bottom: 0.2rem; justify-content: center;">
+                                    @php
+                                        $roundedRating = round($book->average_rating);
+                                    @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $roundedRating)
+                                            <span class="fa fa-star checked" aria-hidden="true"></span>
+                                        @else
+                                            <span class="fa fa-star" aria-hidden="true"></span>
+                                        @endif
+                                    @endfor
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                </div>
+                                <div class="quantity">Available: {{ $book->quantity }}</div>
+                                @if($book->quantity > 0)
+                                    <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="action-button">Borrow</button>
+                                    </form>
+                                @else
+                                    <span class="out-of-stock">Out of Stock</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p style="color: #121246; padding: 1rem; flex: 0 0 auto;">No most read books available.</p>
+                    @endforelse
+                </div>
+                <button class="carousel-arrow right" aria-label="Scroll right" tabindex="0">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="quantity">Available: {{ $book->quantity }}</div>
-            @if($book->quantity > 0)
-                <form action="{{ route('dashboard.borrow', $book) }}" method="POST" style="display:inline;">
-                    @csrf
-                </form>
-            @else
-                <span class="out-of-stock">Out of Stock</span>
-            @endif
-        </div>
-    </div>
-@empty
-    <p style="color: #121246; padding: 20px;">No most read books available.</p>
-@endforelse
-            </div>
-        </div>
+        </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.menu-button');
+            const hoverArea = document.querySelector('.hover-area');
             const navigation = document.querySelector('.navigation');
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
             const homePage = document.querySelector('.home-page');
 
-            menuButton.addEventListener('click', function() {
-                navigation.classList.toggle('active');
-                homePage.classList.toggle('nav-active');
+            // Mobile navigation toggle
+            if (mobileNavToggle) {
+                mobileNavToggle.addEventListener('click', function() {
+                    const isExpanded = navigation.getAttribute('aria-expanded') === 'true';
+                    const newExpandedState = !isExpanded;
+                    navigation.setAttribute('aria-expanded', newExpandedState);
+                    mobileNavToggle.setAttribute('aria-expanded', newExpandedState);
+                    homePage.setAttribute('aria-nav-expanded', newExpandedState); // Sync main content adjustment
+                    mobileNavToggle.innerHTML = `<i class="fa ${!isExpanded ? 'fa-times' : 'fa-bars'}"></i>`;
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768 && navigation.getAttribute('aria-expanded') === 'true' && !navigation.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                        navigation.setAttribute('aria-expanded', 'false');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
+                        homePage.setAttribute('aria-nav-expanded', 'false'); // Reset main content
+                        mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                    }
+                });
+            }
+
+            // Desktop hover navigation
+            if (hoverArea) {
+                hoverArea.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                hoverArea.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768 && !navigation.matches(':hover')) {
+                        navigation.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                navigation.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                navigation.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                hoverArea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' && window.innerWidth > 768) {
+                        e.preventDefault();
+                        navigation.setAttribute('aria-expanded', navigation.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+                    }
+                });
+            }
+
+            // Carousel navigation with touch support
+            document.querySelectorAll('.carousel-wrapper').forEach(wrapper => {
+                const container = wrapper.querySelector('.book-container');
+                const leftArrow = wrapper.querySelector('.carousel-arrow.left');
+                const rightArrow = wrapper.querySelector('.carousel-arrow.right');
+
+                function isAtEnd() {
+                    return container.scrollLeft >= container.scrollWidth - container.clientWidth - 10;
+                }
+
+                function isAtStart() {
+                    return container.scrollLeft <= 10;
+                }
+
+                function getScrollDistance() {
+                    const bookCard = container.querySelector('.book-card');
+                    if (bookCard) {
+                        const cardWidth = bookCard.offsetWidth;
+                        const gap = parseFloat(getComputedStyle(container).gap) || 16;
+                        return cardWidth + gap;
+                    }
+                    return 200;
+                }
+
+                leftArrow.addEventListener('click', () => {
+                    if (isAtStart() && container.scrollWidth > container.clientWidth) {
+                        container.scrollTo({ left: container.scrollWidth - container.clientWidth, behavior: 'smooth' });
+                    } else {
+                        container.scrollBy({ left: -getScrollDistance(), behavior: 'smooth' });
+                    }
+                });
+
+                rightArrow.addEventListener('click', () => {
+                    const scrollDistance = getScrollDistance();
+                    const remainingScroll = container.scrollWidth - container.clientWidth - container.scrollLeft;
+                    if (isAtEnd() || remainingScroll < scrollDistance) {
+                        container.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        container.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+                    }
+                });
+
+                [leftArrow, rightArrow].forEach(arrow => {
+                    arrow.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            arrow.click();
+                        }
+                    });
+                });
+
+                // Touch swipe support
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                container.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                container.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const swipeDistance = touchStartX - touchEndX;
+                    const minSwipeDistance = 50;
+
+                    if (swipeDistance > minSwipeDistance) {
+                        rightArrow.click();
+                    } else if (swipeDistance < -minSwipeDistance) {
+                        leftArrow.click();
+                    }
+                });
             });
 
-            // Reusable function to toggle favorite via AJAX and update UI
+            // Favorite toggle
             function toggleFavoriteAJAX(form, button, icon) {
                 const url = form.action;
                 const token = form.querySelector('input[name="_token"]').value;
@@ -577,7 +870,6 @@
                         icon.classList.add('fa-regular');
                         button.classList.remove('favorited');
                     }
-                    // Store favorite status in localStorage for synchronization
                     localStorage.setItem('favorite_' + form.action, JSON.stringify(data.favorited));
                 })
                 .catch(error => {
@@ -586,7 +878,6 @@
                 });
             }
 
-            // Attach event listeners to favorite forms
             document.querySelectorAll('form[action*="/favorites"]').forEach(form => {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -596,7 +887,6 @@
                 });
             });
 
-            // On page load, synchronize favorite icons based on localStorage
             document.querySelectorAll('form[action*="/favorites"]').forEach(form => {
                 const button = form.querySelector('button.bookmark-icon');
                 const icon = button.querySelector('i');
@@ -612,7 +902,6 @@
                         icon.classList.add('fa-regular');
                         button.classList.remove('favorited');
                     }
-                    // Clear the stored value after applying
                     localStorage.removeItem('favorite_' + form.action);
                 }
             });
