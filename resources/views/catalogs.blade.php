@@ -87,7 +87,7 @@
         }
 
         .grand-archives2 {
-           color: #121246;
+            color: #121246;
             text-align: center;
             font-family: "Inter-Regular", sans-serif;
             font-size: 32px;
@@ -196,7 +196,7 @@
         }
 
         .genre-card a {
-            color: #ded9c3;
+            color: #ffffff;
             text-align: center;
             font-family: "Inter", sans-serif;
             font-size: 20px;
@@ -249,6 +249,7 @@
 
         .pagination a:hover {
             background-color: #b5835a;
+            color: #fff;
             transform: scale(1.1);
         }
 

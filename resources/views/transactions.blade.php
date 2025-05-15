@@ -289,6 +289,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .rating-submit {
@@ -314,6 +315,36 @@
             opacity: 0.6;
             cursor: not-allowed;
             background: linear-gradient(90deg, #a68a5f 0%, #8f6b47 100%);
+        }
+
+        .rating-close {
+            padding: 5px;
+            background: linear-gradient(90deg, #d4a373 0%, #b5835a 100%);
+            color: var(--text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            line-height: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rating-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .rating-close:focus {
+            outline: 2px solid #ffca08;
+            outline-offset: 2px;
         }
 
         .rating-display {
@@ -396,6 +427,12 @@
             .rating-submit {
                 font-size: 12px;
                 padding: 4px 8px;
+            }
+
+            .rating-close {
+                font-size: 12px;
+                width: 20px;
+                height: 20px;
             }
 
             .rating-display {
@@ -488,6 +525,12 @@
                 padding: 4px 8px;
             }
 
+            .rating-close {
+                font-size: 12px;
+                width: 20px;
+                height: 20px;
+            }
+
             .rating-display {
                 font-size: 11px;
             }
@@ -528,6 +571,29 @@
                             @if($book->late_fee > 0 && !$book->returned_at)
                                 <div class="late-fee">Late Fee: ${{ number_format($book->late_fee, 2) }}</div>
                             @endif
+                            @if($book->returned_at)
+                                @php
+                                    $userRating = auth()->user()->ratings()->where('book_id', $book->book->id)->first()?->rating;
+                                    $averageRating = $book->book->averageRating ?? 0;
+                                @endphp
+                                <form class="rating-form" action="{{ route('books.rate', $book->book->id) }}" method="POST" data-book-id="{{ $book->book->id }}">
+                                    @csrf
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5-{{ $book->id }}" name="rating" value="5" {{ $userRating == 5 ? 'checked' : '' }} required>
+                                        <label for="star5-{{ $book->id }}" title="5 stars">★</label>
+                                        <input type="radio" id="star4-{{ $book->id }}" name="rating" value="4" {{ $userRating == 4 ? 'checked' : '' }}>
+                                        <label for="star4-{{ $book->id }}" title="4 stars">★</label>
+                                        <input type="radio" id="star3-{{ $book->id }}" name="rating" value="3" {{ $userRating == 3 ? 'checked' : '' }}>
+                                        <label for="star3-{{ $book->id }}" title="3 stars">★</label>
+                                        <input type="radio" id="star2-{{ $book->id }}" name="rating" value="2" {{ $userRating == 2 ? 'checked' : '' }}>
+                                        <label for="star2-{{ $book->id }}" title="2 stars">★</label>
+                                        <input type="radio" id="star1-{{ $book->id }}" name="rating" value="1" {{ $userRating == 1 ? 'checked' : '' }}>
+                                        <label for="star1-{{ $book->id }}" title="1 star">★</label>
+                                    </div>
+                                    <button type="submit" class="rating-submit">Submit Rating</button>
+                                    <button type="button" class="rating-close" aria-label="Close rating form" data-book-id="{{ $book->book->id }}">×</button>
+                                </form>
+                            @endif
                         </div>
                         <div class="status {{ $book->returned_at ? 'returned' : ($book->due_date < now() && !$book->returned_at ? 'due' : 'borrowed') }}">
                             {{ $book->returned_at ? 'Returned' : ($book->due_date < now() && !$book->returned_at ? 'Due' : 'Borrowed') }}
@@ -550,39 +616,6 @@
                     </article>
                 @empty
                     <p class="empty-message">No books are currently due.</p>
-                @endforelse
-            </section>
-            <section class="books-due-section" aria-label="Recently returned books">
-                <h2 class="books-that-are-due">Recently Returned</h2>
-                @forelse($returnedBooks as $book)
-                    <article class="book-entry" style="--index: {{ $loop->index }}">
-                        <div class="book-info">
-                            <div class="book-name">Book: {{ $book->book->title }}</div>
-                            <div class="due-date">Returned: {{ $book->returned_at->format('Y-m-d') }}</div>
-                            @php
-                                $userRating = auth()->user()->ratings()->where('book_id', $book->book->id)->first()?->rating;
-                                $averageRating = $book->book->averageRating ?? 0;
-                            @endphp
-                                @csrf
-                                <div class="star-rating">
-                                    <input type="radio" id="star5-{{ $book->id }}" name="rating" value="5" {{ $userRating == 5 ? 'checked' : '' }} required>
-                                    <label for="star5-{{ $book->id }}" title="5 stars">★</label>
-                                    <input type="radio" id="star4-{{ $book->id }}" name="rating" value="4" {{ $userRating == 4 ? 'checked' : '' }}>
-                                    <label for="star4-{{ $book->id }}" title="4 stars">★</label>
-                                    <input type="radio" id="star3-{{ $book->id }}" name="rating" value="3" {{ $userRating == 3 ? 'checked' : '' }}>
-                                    <label for="star3-{{ $book->id }}" title="3 stars">★</label>
-                                    <input type="radio" id="star2-{{ $book->id }}" name="rating" value="2" {{ $userRating == 2 ? 'checked' : '' }}>
-                                    <label for="star2-{{ $book->id }}" title="2 stars">★</label>
-                                    <input type="radio" id="star1-{{ $book->id }}" name="rating" value="1" {{ $userRating == 1 ? 'checked' : '' }}>
-                                    <label for="star1-{{ $book->id }}" title="1 star">★</label>
-                                </div>
-                                <button type="submit" class="rating-submit">Submit Rating</button>
-                            </form>
-                        </div>
-                        <div class="status returned">Returned</div>
-                    </article>
-                @empty
-                    <p class="empty-message">No books have been recently returned.</p>
                 @endforelse
             </section>
             <section class="payment-history-section" aria-label="Payment history">
@@ -656,8 +689,21 @@
                     if (submitButton) {
                         submitButton.textContent = 'Thanks for Rating';
                         submitButton.disabled = true;
+                        form.style.display = 'none';
                     }
                     // Allow form submission to proceed
+                });
+            });
+
+            // Rating form close handling
+            const closeButtons = document.querySelectorAll('.rating-close');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookId = button.getAttribute('data-book-id');
+                    const form = document.querySelector(`.rating-form[data-book-id="${bookId}"]`);
+                    if (form) {
+                        form.style.display = 'none';
+                    }
                 });
             });
         });

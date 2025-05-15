@@ -1,11 +1,11 @@
-<!-- resources/views/genre/show.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $genre->name }} - Grand Archives</title>
+    <title>{{ $genre->name ?? 'Unknown Genre' }} - Grand Archives</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
@@ -38,20 +38,34 @@
             position: relative;
         }
 
-        /* Navigation (consistent with catalog-selection.blade.php) */
+        /* Hover area for sidebar trigger */
+        .hover-area {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100vh;
+            background: transparent;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        /* Navigation */
         .navigation {
             width: 250px;
             height: 100vh;
             position: fixed;
-            left: -309px;
+            left: -250px;
             top: 0;
             transition: left 0.3s ease-in-out;
             z-index: 10;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
+            background: rgba(18, 18, 70, 0.9);
+            backdrop-filter: blur(10px);
         }
 
-        .navigation.active {
+        .navigation[aria-expanded="true"] {
             left: 0;
         }
 
@@ -60,35 +74,19 @@
             flex: 1;
             background: #f9f8f4;
             min-height: 100vh;
-            padding-left: 0px;
+            padding: 1rem;
             transition: padding-left 0.3s ease-in-out;
             overflow-y: auto;
         }
 
-        .genre-page.nav-active {
-            padding-left: 310px;
+        .genre-page[aria-nav-expanded="true"] {
+            padding-left: 250px;
         }
 
-        .menu-button {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-            cursor: pointer;
-            z-index: 20;
-            color: #121246;
-            font-size: 28px;
-            background: transparent;
-            transition: color 0.2s;
-        }
-
-        .menu-button:hover {
-            color: #b5835a;
-        }
-
-        /* Book card styles similar to dashboard */
+        /* Book card styles */
         .book-card {
             width: 100%;
-            height: 300px; /* Increased to accommodate quantity and button */
+            height: 300px;
             background: #b5835a;
             border-radius: 15px;
             border: 1px solid #b5835a;
@@ -151,25 +149,17 @@
             font-style: italic;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .book-card {
-                height: 250px;
-            }
-
-            .book-card img {
-                height: 130px;
-            }
-
-            .book-card p {
-                font-size: 12px;
-            }
-
-            .book-card .quantity, .book-card .action-button, .book-card .out-of-stock {
-                font-size: 10px;
-            }
+        /* Star rating styles */
+        .book-card .fa-star {
+            color: #ccc; /* Empty star color */
+            font-size: 12px;
         }
 
+        .book-card .fa-star.checked {
+            color: #ffca08; /* Filled star color */
+        }
+
+        /* Header rectangle */
         .rectangle-5 {
             background: #ded9c3;
             width: 100%;
@@ -179,17 +169,23 @@
             top: 0;
             border-bottom: 2px solid #b5835a;
             z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .genre-title {
             color: #121246;
             text-align: center;
             font-family: "Inter-Regular", sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 600;
-            position: relative;
-            top: 25px;
-            z-index: 2;
+            text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.3);
+            background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
         }
 
         /* Search bar */
@@ -274,42 +270,6 @@
             background: #b5835a;
         }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #d4a373;
-            font-size: 36px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .modal-close:hover {
-            color: #b5835a;
-        }
-
         /* Success/Error Messages */
         .success-message, .error-message {
             text-align: center;
@@ -318,7 +278,7 @@
             border-radius: 4px;
             max-width: 500px;
         }
-    
+
         .material-symbols-outlined {
             font-variation-settings:
             'FILL' 0,
@@ -339,21 +299,21 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            .hover-area {
+                display: none;
+            }
+
             .navigation {
                 width: 250px;
                 left: -250px;
             }
 
-            .genre-page {
-                padding-left: 50px;
-            }
-
-            .genre-page.nav-active {
-                padding-left: 260px;
+            .genre-page[aria-nav-expanded="true"] {
+                padding-left: 0;
             }
 
             .genre-title {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .search-container {
@@ -369,21 +329,32 @@
                 font-size: 12px;
                 padding: 4px 8px;
             }
+
+            .book-card {
+                height: 250px;
+            }
+
+            .book-card img {
+                height: 130px;
+            }
+
+            .book-card p {
+                font-size: 12px;
+            }
+
+            .book-card .quantity, .book-card .action-button, .book-card .out-of-stock {
+                font-size: 10px;
+            }
+
+            .book-card .fa-star {
+                font-size: 10px;
+            }
         }
 
         @media (max-width: 480px) {
             .navigation {
                 width: 200px;
                 left: -200px;
-            }
-
-            .genre-page.nav-active {
-                padding-left: 220px;
-            }
-
-            .menu-button {
-                left: 10px;
-                top: 15px;
             }
 
             .search-container {
@@ -399,33 +370,27 @@
                 font-size: 10px;
                 padding: 3px 6px;
             }
-
-            .modal-close {
-                font-size: 28px;
-                top: 10px;
-                right: 10px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="genre-container">
+        <!-- Hover area for sidebar -->
+        <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
         <!-- Navigation Sidebar -->
-        <div class="navigation">
+        <div class="navigation" aria-expanded="false">
             @include('layouts.navigation')
         </div>
-
         <!-- Main Content -->
-        <div class="genre-page">
-            <button class="menu-button">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div class="rectangle-5"></div>
-            <div class="genre-title">{{ $genre->name }}</div>
+        <div class="genre-page" aria-nav-expanded="false">
+            <div class="rectangle-5">
+                <div class="genre-title">{{ $genre->name ?? 'Unknown Genre' }}</div>
+            </div>
             <div class="search-container">
                 <form method="GET" action="{{ route('genre.show', $genre->id) }}">
                     <input type="text" name="search" class="rectangle-7" placeholder="Search books..." value="{{ request('search') }}">
                     <button type="submit" style="background: none; border: none; padding: 0;">
+                        <span class="material-symbols-outlined magnifying-1">search</span>
                     </button>
                 </form>
             </div>
@@ -449,7 +414,7 @@
                             <a href="{{ route('books.show', $book->id) }}">
                                 <p>{{ $book->title }}</p>
                             </a>
-                            <div style="display: flex; align-items: center; gap: 5px; color: #ffca08; font-size: 12px; margin-bottom: 5px;">
+                            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
                                 @php
                                     $roundedRating = round($book->average_rating);
                                 @endphp
@@ -476,24 +441,51 @@
         </div>
     </div>
 
-    <!-- Remove modal since we're redirecting instead of showing a modal -->
-    <!-- Modal for image viewing is no longer needed -->
-    <!-- <div class="modal" id="imageModal">
-        <span class="modal-close">×</span>
-        <img class="modal-content" id="modalImage">
-    </div> -->
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.menu-button');
+            const hoverArea = document.querySelector('.hover-area');
             const navigation = document.querySelector('.navigation');
             const genrePage = document.querySelector('.genre-page');
 
-            // Toggle navigation
-            menuButton.addEventListener('click', function() {
-                navigation.classList.toggle('active');
-                genrePage.classList.toggle('nav-active');
-            });
+            // Hover navigation
+            if (hoverArea) {
+                hoverArea.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'true');
+                        genrePage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
+
+                hoverArea.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768 && !navigation.matches(':hover')) {
+                        navigation.setAttribute('aria-expanded', 'false');
+                        genrePage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                navigation.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'true');
+                        genrePage.setAttribute('aria-nav-expanded', 'true');
+                    }
+                });
+
+                navigation.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        navigation.setAttribute('aria-expanded', 'false');
+                        genrePage.setAttribute('aria-nav-expanded', 'false');
+                    }
+                });
+
+                hoverArea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' && window.innerWidth > 768) {
+                        e.preventDefault();
+                        const isExpanded = navigation.getAttribute('aria-expanded') === 'true';
+                        navigation.setAttribute('aria-expanded', !isExpanded);
+                        genrePage.setAttribute('aria-nav-expanded', !isExpanded);
+                    }
+                });
+            }
         });
     </script>
     @vite(['resources/js/app.js'])

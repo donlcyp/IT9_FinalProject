@@ -155,6 +155,23 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
+        .profile-details {
+            background: var(--header-bg); /* Matches .library-stats */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-details:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
         .images-1-1 {
             border-radius: 50%;
             width: 120px;
@@ -237,8 +254,8 @@
         .edit-profile,
         .logout {
             width: 140px;
-            padding: 10px 20px; /* Adjusted padding for consistent height */
-            line-height: 1.5; /* Ensures uniform vertical alignment */
+            padding: 10px 20px;
+            line-height: 1.5;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
@@ -288,6 +305,10 @@
                 margin: 20px;
             }
 
+            .profile-details {
+                padding: 12px;
+            }
+
             .images-1-1 {
                 width: 100px;
                 height: 100px;
@@ -313,7 +334,7 @@
             .edit-profile,
             .logout {
                 width: 130px;
-                padding: 8px 18px; /* Adjusted padding for smaller screens */
+                padding: 8px 18px;
                 line-height: 1.5;
                 font-size: 13px;
             }
@@ -336,6 +357,10 @@
             .profile-content {
                 margin: 15px;
                 padding: 15px;
+            }
+
+            .profile-details {
+                padding: 10px;
             }
 
             .images-1-1 {
@@ -364,7 +389,7 @@
             .edit-profile,
             .logout {
                 width: 100%;
-                padding: 8px 20px; /* Adjusted padding for full-width buttons */
+                padding: 8px 20px;
                 line-height: 1.5;
             }
         }
@@ -396,11 +421,13 @@
                     </div>
                 @endif
                 <div class="profile-card">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/logo1.png') }}" alt="Profile Picture" class="images-1-1" />
-                    <div class="dreamy-bull">{{ Auth::user()->name }}</div>
-                    <div class="profile-info">Contact: {{ Auth::user()->contact_no ?? 'Not provided' }}</div>
-                    <div class="profile-info">Email: {{ Auth::user()->email }}</div>
-                    <div class="profile-info">Address: {{ Auth::user()->address ?? 'Not provided' }}</div>
+                    <div class="profile-details">
+                        <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/logo1.png') }}" alt="Profile Picture" class="images-1-1" />
+                        <div class="dreamy-bull">{{ Auth::user()->name }}</div>
+                        <div class="profile-info">Contact: {{ Auth::user()->contact_no ?? 'Not provided' }}</div>
+                        <div class="profile-info">Email: {{ Auth::user()->email }}</div>
+                        <div class="profile-info">Address: {{ Auth::user()->address ?? 'Not provided' }}</div>
+                    </div>
                 </div>
                 <div class="profile-card">
                     <div class="library-stats">
@@ -503,4 +530,4 @@
         });
     </script>
 </body>
-</html>
+</html> 

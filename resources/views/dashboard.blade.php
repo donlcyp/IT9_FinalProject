@@ -548,7 +548,7 @@
                 </div>
             @endif
             <!-- Trending Books -->
-            <h2 class="trending">Trending</h2>
+            <h2 class="trending">Newly Arrived</h2>
             <div class="carousel-wrapper">
                 <button class="carousel-arrow left" aria-label="Scroll left" tabindex="0">
                     <i class="fa fa-chevron-left"></i>

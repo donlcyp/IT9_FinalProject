@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/genres/{id}', [BookController::class, 'showGenre'])->name('genre.show');
 
     // Book routes
+    Route::get('/books', [BookController::class, 'index'])->name('books.index');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show'); // For description.blade.php
     Route::post('/books/borrow/{book}', [BookController::class, 'borrow'])->name('books.borrow');
     Route::post('/books/{id}/rate', [BookController::class, 'rateBook'])->name('books.rate');
@@ -60,7 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [AdminController::class, 'store'])->name('admin.store');
         Route::get('/edit/{book}', [AdminController::class, 'edit'])->name('admin.edit');
         Route::put('/update/{book}', [AdminController::class, 'update'])->name('admin.update');
-Route::match(['post', 'put'], '/borrow-status/{borrowedBook}', [AdminController::class, 'updateBorrowStatus'])->name('admin.updateBorrowStatus');
+    Route::match(['post', 'put'], '/borrow-status/{borrowedBook}', [AdminController::class, 'updateBorrowStatus'])->name('admin.updateBorrowStatus');
         Route::post('/mark-as-paid/{borrowedBook}', [AdminController::class, 'markAsPaid'])->name('admin.markAsPaid');
         Route::get('/adjust-stock/{book}', [AdminController::class, 'adjustStock'])->name('admin.adjustStock');
         Route::post('/update-stock/{book}', [AdminController::class, 'updateStock'])->name('admin.updateStock');
