@@ -278,6 +278,33 @@
             box-shadow: 0 4px 15px rgba(181, 131, 90, 0.5);
         }
 
+        /* Mobile Navigation Toggle Button */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--accent);
+            cursor: pointer;
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            z-index: 1001;
+            padding: 12px;
+            transition: transform 0.3s ease, color 0.2s ease;
+            line-height: 1;
+        }
+
+        .mobile-nav-toggle:hover,
+        .mobile-nav-toggle:focus {
+            color: #8c5f3f;
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav-toggle:active {
+            color: #6b4e31;
+        }
+
         @media (max-width: 768px) {
             .hover-area {
                 display: none;
@@ -338,6 +365,14 @@
                 line-height: 1.5;
                 font-size: 13px;
             }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
+            .profile-page {
+                padding-top: 90px; /* Adjusted to account for the toggle button */
+            }
         }
 
         @media (max-width: 480px) {
@@ -392,11 +427,25 @@
                 padding: 8px 20px;
                 line-height: 1.5;
             }
+
+            .mobile-nav-toggle {
+                font-size: 20px;
+                right: 10px;
+                top: 10px;
+                padding: 10px;
+            }
+
+            .profile-page {
+                padding-top: 80px; /* Adjusted for smaller screens */
+            }
         }
     </style>
 </head>
 <body>
     <div class="profile-container">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+        </button>
         <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
         <div class="sidebar" aria-expanded="false">
             @include('layouts.navigation')
@@ -407,7 +456,7 @@
             </div>
             <div class="profile-content">
                 @if (session('success'))
-                    <div class="profile-card alert alert-success" style="color: #2ecc71; animation: fadeIn 0.7s ease-in-out;">
+                    <div class="profile-card alert alert-success" style="color: #ffffff; animation: fadeIn 0.7s ease-in-out;">
                         {{ session('success') }}
                     </div>
                 @endif
@@ -488,6 +537,7 @@
             const hoverArea = document.querySelector('.hover-area');
             const sidebar = document.querySelector('.sidebar');
             const profilePage = document.querySelector('.profile-page');
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
 
             if (hoverArea) {
                 hoverArea.addEventListener('mouseenter', function() {
@@ -527,7 +577,41 @@
                     }
                 });
             }
+
+            if (mobileNavToggle) {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+                    const newExpandedState = !isExpanded;
+                    sidebar.setAttribute('aria-expanded', newExpandedState);
+                    mobileNavToggle.setAttribute('aria-expanded', newExpandedState);
+                    profilePage.setAttribute('aria-expanded', newExpandedState);
+                    mobileNavToggle.innerHTML = `<i class="fa ${newExpandedState ? 'fa-times' : 'fa-bars'}"></i>`;
+                });
+
+                // Close nav when clicking outside on mobile
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768 && sidebar.getAttribute('aria-expanded') === 'true' && !sidebar.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
+                        profilePage.setAttribute('aria-expanded', 'false');
+                        mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                    }
+                });
+
+                // Close nav when clicking a link inside sidebar
+                sidebar.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 768) {
+                            sidebar.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.setAttribute('aria-expanded', 'false');
+                            profilePage.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                        }
+                    });
+                });
+            }
         });
     </script>
 </body>
-</html> 
+</html>

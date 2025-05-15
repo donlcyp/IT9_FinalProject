@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Genre - Grand Archives</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" />
     @vite(['resources/css/app.css'])
 
     <style>
@@ -17,7 +17,7 @@
 
         body, html {
             height: 100%;
-            font-family: "Inter-Regular", sans-serif;
+            font-family: "Inter", sans-serif;
             background: #121246;
             color: #fff;
         }
@@ -26,14 +26,16 @@
             max-width: 600px;
             margin: 40px auto;
             padding: 20px;
-            background: #1a1a4d;
+            background: #ded9c3;
             border-radius: 8px;
         }
 
         .form-container h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #d4a373;
+            color: #121246;
+            font-size: 30px;
+            font-weight: bold;
         }
 
         .form-group {
@@ -43,7 +45,7 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #d4a373;
+            color: #121246;
         }
 
         .form-group input {
@@ -53,6 +55,11 @@
             border: none;
             background: #d9d9d9;
             color: #121246;
+            outline: 2px solid #121246;
+        }
+
+        .form-group input:focus {
+            outline: 2px solid #b5835a;
         }
 
         .submit-btn {
@@ -60,7 +67,7 @@
             width: 100%;
             padding: 10px;
             background: #d4a373;
-            color: #121246;
+            color: #ffffff !important;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -76,7 +83,7 @@
             margin-bottom: 20px;
             padding: 8px 16px;
             background: #d4a373;
-            color: #121246;
+            color: #ffffff !important;
             border-radius: 4px;
             text-decoration: none;
         }
@@ -99,16 +106,45 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .message.success {
+            background: #6aa933;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .form-container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            .form-group input {
+                font-size: 0.9rem;
+                padding: 6px;
+            }
+
+            .submit-btn,
+            .back-btn {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <a href="{{ route('admin.index') }}" class="back-btn">Back to Dashboard</a>
         <h2>Add New Genre</h2>
+        @if (session('success'))
+            <div class="message success">{{ session('success') }}</div>
+        @endif
         @if (session('error'))
-            <div class="error-message">
-                {{ session('error') }}
-            </div>
+            <div class="error-message">{{ session('error') }}</div>
         @endif
         <form action="{{ route('admin.genres.store') }}" method="POST">
             @csrf

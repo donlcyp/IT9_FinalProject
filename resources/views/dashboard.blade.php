@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Grand Archives</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         /* Reset and base styles */
@@ -18,7 +19,7 @@
         body, html {
             height: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #121246;
+            background: #f0f0e4;
             color: #121246;
             overflow-x: hidden;
         }
@@ -42,21 +43,28 @@
         /* Mobile Navigation Toggle Button */
         .mobile-nav-toggle {
             display: none;
-            position: fixed;
-            top: 1rem;
-            right: 1rem; /* Positioned on the right */
-            background: #b5835a;
-            color: #fff;
+            background: none;
             border: none;
-            padding: 0.5rem;
-            border-radius: 8px;
+            font-size: 24px;
+            color: #b5835a;
             cursor: pointer;
-            z-index: 20;
-            font-size: 1.5rem;
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            z-index: 1001; /* Below navigation to allow overlay */
+            padding: 12px; /* Larger touch area */
+            transition: transform 0.3s ease, color 0.2s ease;
+            line-height: 1;
         }
 
-        .mobile-nav-toggle:hover {
-            background: #8c5f3f;
+        .mobile-nav-toggle:hover,
+        .mobile-nav-toggle:focus {
+            color: #8c5f3f;
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav-toggle:active {
+            color: #6b4e31;
         }
 
         /* Navigation styles */
@@ -65,17 +73,16 @@
             background: #ded9c3;
             height: 100vh;
             position: fixed;
-            left: 0;
+            left: -250px;
             top: 0;
-            transform: translateX(-100%); /* Hidden off-screen to the left */
-            transition: transform 0.3s ease-in-out;
-            z-index: 10;
+            transition: left 0.3s ease-in-out;
+            z-index: 1002; /* Above toggle button and content */
             box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
             border-radius: 0 12px 12px 0;
         }
 
         .navigation[aria-expanded="true"] {
-            transform: translateX(0); /* Slide in from left */
+            left: 0;
         }
 
         /* Hover area for desktop */
@@ -86,16 +93,8 @@
             width: 20px;
             height: 100vh;
             background: transparent;
-            z-index: 20;
+            z-index: 1003; /* Above navigation */
             cursor: pointer;
-        }
-
-        .hover-area:hover + .navigation {
-            transform: translateX(0);
-        }
-
-        .hover-area:hover ~ .home-page {
-            padding-left: 17rem;
         }
 
         /* Main content styles */
@@ -103,22 +102,21 @@
             flex: 1;
             background: #f0f0e4;
             min-height: 100vh;
-            padding: 1rem;
-            transition: padding-left 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+            padding: 2rem 1rem;
+            transition: margin-left 0.3s ease-in-out;
             position: relative;
             z-index: 1;
         }
 
         .home-page[aria-nav-expanded="true"] {
-            margin-left: 250px; /* Push content to the right when nav is open on mobile */
-            padding-left: 1rem; /* Maintain inner padding */
+            margin-left: 250px;
         }
 
         /* Logo and GRAND ARCHIVES */
         .logo {
-            width: 80px;
+            width: 80px; /* Original size */
             height: auto;
-            margin: 1rem auto 0.5rem;
+            margin: 0 auto 0.5rem;
             display: block;
         }
 
@@ -126,15 +124,15 @@
             color: #0e0f3a;
             text-align: center;
             font-family: "JacquesFrancoisShadow-Regular", "Cinzel Decorative", serif;
-            font-size: 1.5rem;
+            font-size: 2rem; /* Larger as in original */
             font-weight: 400;
-            margin-bottom: 1rem;
             text-shadow: 2px 2px 6px rgba(181, 131, 90, 0.7);
             background: linear-gradient(to right, #0e0f3a 0%, #8c5f3f 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             transition: transform 0.3s ease;
+            margin-bottom: 1rem;
         }
 
         .grand-archives2:hover {
@@ -351,12 +349,12 @@
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .navigation {
-                width: 250px;
-                transform: translateX(-100%); /* Hidden off left */
+                width: 200px;
+                left: -200px;
             }
 
             .navigation[aria-expanded="true"] {
-                transform: translateX(0); /* Slide in from left */
+                left: 0;
             }
 
             .hover-area {
@@ -365,23 +363,26 @@
 
             .mobile-nav-toggle {
                 display: block;
+                font-size: 22px;
+                right: 10px;
+                top: 10px;
+                padding: 14px;
             }
 
             .home-page {
-                padding: 0.5rem;
-                transition: margin-left 0.3s ease-in-out;
+                padding: 3rem 0.5rem 1.5rem; /* Increased top padding to ensure header visibility */
             }
 
             .home-page[aria-nav-expanded="true"] {
-                margin-left: 250px; /* Push content to the right when nav is open */
+                margin-left: 200px;
             }
 
             .grand-archives2 {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
             }
 
             .logo {
-                width: 70px;
+                width: 60px;
             }
 
             .book-card {
@@ -404,14 +405,7 @@
             }
 
             .carousel-arrow {
-                width: 48px;
-                height: 48px;
-                opacity: 0.7;
-                display: flex;
-            }
-
-            .carousel-arrow i {
-                font-size: 1.2rem;
+                display: none; /* Hide arrows on mobile */
             }
 
             .trending, .trending2, .trending3, .borrowed-books {
@@ -431,21 +425,33 @@
         }
 
         @media (max-width: 480px) {
+            .mobile-nav-toggle {
+                font-size: 20px;
+                right: 8px;
+                top: 8px;
+                padding: 12px;
+            }
+
+            .home-page {
+                padding: 2.5rem 0.5rem 1rem; /* Adjusted top padding for smaller screens */
+            }
+
+            .logo {
+                width: 50px;
+                margin-right: 8px;
+            }
+
+            .grand-archives2 {
+                font-size: 1.25rem;
+            }
+
             .book-card {
                 flex: 0 0 140px;
-                height: 240px;
+                height: 260px;
             }
 
             .book-card img {
                 height: 160px;
-            }
-
-            .grand-archives2 {
-                font-size: 1rem;
-            }
-
-            .logo {
-                width: 60px;
             }
 
             .book-card p {
@@ -463,25 +469,28 @@
             }
 
             .carousel-arrow {
-                width: 40px;
-                height: 40px;
+                display: none; /* Ensure arrows are hidden on smaller mobile screens */
             }
         }
 
         /* Ensure content fits on short screens */
         @media (max-height: 600px) {
+            .mobile-nav-toggle {
+                top: 8px;
+                padding: 10px;
+            }
+
             .home-page {
-                padding: 0.5rem;
+                padding: 2rem 0.5rem 1rem; /* Adjusted top padding for short screens */
             }
 
             .logo {
                 width: 50px;
-                margin: 0.5rem auto 0.25rem;
+                margin-right: 8px;
             }
 
             .grand-archives2 {
-                font-size: 0.9rem;
-                margin-bottom: 0.5rem;
+                font-size: 1rem;
             }
 
             .trending, .trending2, .trending3, .borrowed-books {
@@ -580,7 +589,7 @@
                                             <span class="fa fa-star" aria-hidden="true"></span>
                                         @endif
                                     @endfor
-                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 1) }}/5)</span>
                                 </div>
                                 <div class="quantity">Available: {{ $book->quantity }}</div>
                                 @if($book->quantity > 0)
@@ -634,7 +643,7 @@
                                             <span class="fa fa-star" aria-hidden="true"></span>
                                         @endif
                                     @endfor
-                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 1) }}/5)</span>
                                 </div>
                                 <div class="quantity">Available: {{ $book->quantity }}</div>
                                 @if($book->quantity > 0)
@@ -688,7 +697,7 @@
                                             <span class="fa fa-star" aria-hidden="true"></span>
                                         @endif
                                     @endfor
-                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                    <span style="color: #121246; font-size: 0.7rem; margin-left: 0.3rem;">({{ number_format($book->average_rating, 1) }}/5)</span>
                                 </div>
                                 <div class="quantity">Available: {{ $book->quantity }}</div>
                                 @if($book->quantity > 0)
@@ -720,22 +729,36 @@
 
             // Mobile navigation toggle
             if (mobileNavToggle) {
-                mobileNavToggle.addEventListener('click', function() {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
                     const isExpanded = navigation.getAttribute('aria-expanded') === 'true';
                     const newExpandedState = !isExpanded;
                     navigation.setAttribute('aria-expanded', newExpandedState);
                     mobileNavToggle.setAttribute('aria-expanded', newExpandedState);
-                    homePage.setAttribute('aria-nav-expanded', newExpandedState); // Sync main content adjustment
-                    mobileNavToggle.innerHTML = `<i class="fa ${!isExpanded ? 'fa-times' : 'fa-bars'}"></i>`;
+                    homePage.setAttribute('aria-nav-expanded', newExpandedState);
+                    mobileNavToggle.innerHTML = `<i class="fa ${newExpandedState ? 'fa-times' : 'fa-bars'}"></i>`;
                 });
 
+                // Close nav when clicking outside on mobile
                 document.addEventListener('click', function(e) {
                     if (window.innerWidth <= 768 && navigation.getAttribute('aria-expanded') === 'true' && !navigation.contains(e.target) && !mobileNavToggle.contains(e.target)) {
                         navigation.setAttribute('aria-expanded', 'false');
                         mobileNavToggle.setAttribute('aria-expanded', 'false');
-                        homePage.setAttribute('aria-nav-expanded', 'false'); // Reset main content
+                        homePage.setAttribute('aria-nav-expanded', 'false');
                         mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
                     }
+                });
+
+                // Close nav when clicking a link inside navigation
+                navigation.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 768) {
+                            navigation.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.setAttribute('aria-expanded', 'false');
+                            homePage.setAttribute('aria-nav-expanded', 'false');
+                            mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                        }
+                    });
                 });
             }
 
@@ -744,31 +767,37 @@
                 hoverArea.addEventListener('mouseenter', function() {
                     if (window.innerWidth > 768) {
                         navigation.setAttribute('aria-expanded', 'true');
+                        homePage.setAttribute('aria-nav-expanded', 'true');
                     }
                 });
 
                 hoverArea.addEventListener('mouseleave', function() {
                     if (window.innerWidth > 768 && !navigation.matches(':hover')) {
                         navigation.setAttribute('aria-expanded', 'false');
+                        homePage.setAttribute('aria-nav-expanded', 'false');
                     }
                 });
 
                 navigation.addEventListener('mouseenter', function() {
                     if (window.innerWidth > 768) {
                         navigation.setAttribute('aria-expanded', 'true');
+                        homePage.setAttribute('aria-nav-expanded', 'true');
                     }
                 });
 
                 navigation.addEventListener('mouseleave', function() {
                     if (window.innerWidth > 768) {
                         navigation.setAttribute('aria-expanded', 'false');
+                        homePage.setAttribute('aria-nav-expanded', 'false');
                     }
                 });
 
                 hoverArea.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ' && window.innerWidth > 768) {
                         e.preventDefault();
-                        navigation.setAttribute('aria-expanded', navigation.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+                        const isExpanded = navigation.getAttribute('aria-expanded') === 'true';
+                        navigation.setAttribute('aria-expanded', !isExpanded);
+                        homePage.setAttribute('aria-nav-expanded', !isExpanded);
                     }
                 });
             }
@@ -867,7 +896,7 @@
                         button.classList.add('favorited');
                     } else {
                         icon.classList.remove('fa-solid');
-                        icon.classList.add('fa-regular');
+                        iconList.add('fa-regular');
                         button.classList.remove('favorited');
                     }
                     localStorage.setItem('favorite_' + form.action, JSON.stringify(data.favorited));

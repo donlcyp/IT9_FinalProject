@@ -7,10 +7,7 @@
     <title>{{ $genre->name ?? 'Unknown Genre' }} - Grand Archives</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
     @vite(['resources/css/app.css'])
-
     <style>
         /* Reset styles */
         * {
@@ -58,7 +55,7 @@
             left: -250px;
             top: 0;
             transition: left 0.3s ease-in-out;
-            z-index: 10;
+            z-index: 30;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
             background: rgba(18, 18, 70, 0.9);
@@ -74,13 +71,40 @@
             flex: 1;
             background: #f9f8f4;
             min-height: 100vh;
-            padding: 1rem;
+            padding: 100px 1rem 1rem;
             transition: padding-left 0.3s ease-in-out;
             overflow-y: auto;
         }
 
         .genre-page[aria-nav-expanded="true"] {
             padding-left: 250px;
+        }
+
+        /* Mobile navigation toggle */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #b5835a;
+            cursor: pointer;
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            z-index: 1001;
+            padding: 12px;
+            transition: transform 0.3s ease, color 0.2s ease;
+            line-height: 1;
+        }
+
+        .mobile-nav-toggle:hover,
+        .mobile-nav-toggle:focus {
+            color: #8c5f3f;
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav-toggle:active {
+            color: #6b4e31;
         }
 
         /* Book card styles */
@@ -108,24 +132,28 @@
         }
 
         .book-card .book-info {
-            padding: 10px;
+            padding: 8px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: calc(100% - 180px);
         }
 
         .book-card p {
-            color: #121246;
+            color: #fff;
             font-family: "Inter-Regular", sans-serif;
             font-size: 14px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .book-card .quantity {
             color: #fff;
             font-size: 12px;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .book-card .action-button {
@@ -151,12 +179,20 @@
 
         /* Star rating styles */
         .book-card .fa-star {
-            color: #ccc; /* Empty star color */
+            color: #ccc;
             font-size: 12px;
         }
 
         .book-card .fa-star.checked {
-            color: #ffca08; /* Filled star color */
+            color: #ffca08;
+        }
+
+        .book-card .rating-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 3px;
         }
 
         /* Header rectangle */
@@ -168,7 +204,7 @@
             left: 0;
             top: 0;
             border-bottom: 2px solid #b5835a;
-            z-index: 1;
+            z-index: 1000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -190,7 +226,7 @@
 
         /* Search bar */
         .search-container {
-            margin: 100px auto 40px;
+            margin: 20px auto 40px;
             width: 100%;
             max-width: 537px;
             position: relative;
@@ -209,15 +245,23 @@
             color: #121246;
             outline: none;
             border: none;
+            display: flex;
+            align-items: center;
         }
 
         .magnifying-1 {
-            width: 41px;
-            height: 41px;
+            font-size: 24px;
+            color: #121246;
             position: absolute;
-            right: 5px;
-            top: 3px;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .magnifying-1:hover {
+            color: #8c5f3f;
         }
 
         /* Book grid */
@@ -303,25 +347,50 @@
                 display: none;
             }
 
+            .mobile-nav-toggle {
+                display: block;
+                z-index: 1001;
+            }
+
             .navigation {
                 width: 250px;
                 left: -250px;
+                z-index: 1002;
+            }
+
+            .genre-page {
+                padding: 90px 0.5rem 1rem;
             }
 
             .genre-page[aria-nav-expanded="true"] {
                 padding-left: 0;
             }
 
+            .rectangle-5 {
+                height: 70px;
+            }
+
             .genre-title {
-                font-size: 20px;
+                font-size: 24px;
             }
 
             .search-container {
                 max-width: 400px;
+                margin: 10px auto 20px;
+            }
+
+            .rectangle-7 {
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .magnifying-1 {
+                font-size: 20px;
+                right: 10px;
             }
 
             .book-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
 
@@ -331,23 +400,45 @@
             }
 
             .book-card {
-                height: 250px;
+                height: 220px;
             }
 
             .book-card img {
                 height: 130px;
             }
 
-            .book-card p {
-                font-size: 12px;
+            .book-card .book-info {
+                padding: 6px;
+                height: calc(100% - 130px);
             }
 
-            .book-card .quantity, .book-card .action-button, .book-card .out-of-stock {
-                font-size: 10px;
+            .book-card p {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+
+            .book-card .rating-container {
+                gap: 3px;
+                margin-bottom: 2px;
             }
 
             .book-card .fa-star {
                 font-size: 10px;
+            }
+
+            .book-card .rating-container span:last-child {
+                font-size: 10px;
+                margin-left: 5px;
+            }
+
+            .book-card .quantity, .book-card .out-of-stock {
+                font-size: 10px;
+                margin-bottom: 2px;
+            }
+
+            .book-card .action-button {
+                font-size: 10px;
+                padding: 3px 6px;
             }
         }
 
@@ -357,12 +448,41 @@
                 left: -200px;
             }
 
+            .mobile-nav-toggle {
+                right: 10px;
+                top: 10px;
+                font-size: 20px;
+                padding: 10px;
+            }
+
+            .genre-page {
+                padding: 80px 0.5rem 1rem;
+            }
+
+            .rectangle-5 {
+                height: 60px;
+            }
+
+            .genre-title {
+                font-size: 20px;
+            }
+
             .search-container {
                 max-width: 300px;
             }
 
+            .rectangle-7 {
+                height: 36px;
+                font-size: 13px;
+            }
+
+            .magnifying-1 {
+                font-size: 18px;
+                right: 8px;
+            }
+
             .book-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
 
@@ -370,11 +490,45 @@
                 font-size: 10px;
                 padding: 3px 6px;
             }
+
+            .book-card {
+                height: 200px;
+            }
+
+            .book-card img {
+                height: 120px;
+            }
+
+            .book-card .book-info {
+                padding: 5px;
+                height: calc(100% - 120px);
+            }
+
+            .book-card p {
+                font-size: 10px;
+            }
+
+            .book-card .rating-container span:last-child {
+                font-size: 10px;
+            }
+
+            .book-card .quantity, .book-card .out-of-stock {
+                font-size: 9px;
+            }
+
+            .book-card .action-button {
+                font-size: 9px;
+                padding: 2px 5px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="genre-container">
+        <!-- Mobile navigation toggle -->
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+        </button>
         <!-- Hover area for sidebar -->
         <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
         <!-- Navigation Sidebar -->
@@ -389,7 +543,7 @@
             <div class="search-container">
                 <form method="GET" action="{{ route('genre.show', $genre->id) }}">
                     <input type="text" name="search" class="rectangle-7" placeholder="Search books..." value="{{ request('search') }}">
-                    <button type="submit" style="background: none; border: none; padding: 0;">
+                    <button type="submit" style="background: none; border: none; padding: 0; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
                         <span class="material-symbols-outlined magnifying-1">search</span>
                     </button>
                 </form>
@@ -414,7 +568,7 @@
                             <a href="{{ route('books.show', $book->id) }}">
                                 <p>{{ $book->title }}</p>
                             </a>
-                            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
+                            <div class="rating-container">
                                 @php
                                     $roundedRating = round($book->average_rating);
                                 @endphp
@@ -425,7 +579,7 @@
                                         <span class="fa fa-star"></span>
                                     @endif
                                 @endfor
-                                <span style="color: #121246; font-size: 14px; margin-left: 8px;">({{ number_format($book->average_rating, 2) }}/5)</span>
+                                <span style="color: #121246;">({{ number_format($book->average_rating, 2) }}/5)</span>
                             </div>
                             @if($book->quantity > 0)
                                 <span class="quantity">Available: {{ $book->quantity }}</span>
@@ -446,8 +600,9 @@
             const hoverArea = document.querySelector('.hover-area');
             const navigation = document.querySelector('.navigation');
             const genrePage = document.querySelector('.genre-page');
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
 
-            // Hover navigation
+            // Hover navigation for desktop
             if (hoverArea) {
                 hoverArea.addEventListener('mouseenter', function() {
                     if (window.innerWidth > 768) {
@@ -484,6 +639,43 @@
                         navigation.setAttribute('aria-expanded', !isExpanded);
                         genrePage.setAttribute('aria-nav-expanded', !isExpanded);
                     }
+                });
+            }
+
+            // Mobile navigation toggle
+            if (mobileNavToggle) {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isExpanded = navigation.getAttribute('aria-expanded') === 'true';
+                    const newExpandedState = !isExpanded;
+                    navigation.setAttribute('aria-expanded', newExpandedState);
+                    genrePage.setAttribute('aria-nav-expanded', newExpandedState);
+                    mobileNavToggle.setAttribute('aria-expanded', newExpandedState);
+                    mobileNavToggle.innerHTML = `<i class="fa ${newExpandedState ? 'fa-times' : 'fa-bars'}"></i>`;
+                });
+
+                // Close nav when clicking outside on mobile
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768 && navigation.getAttribute('aria-expanded') === 'true') {
+                        if (!navigation.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                            navigation.setAttribute('aria-expanded', 'false');
+                            genrePage.setAttribute('aria-nav-expanded', 'false');
+                            mobileNavToggle.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                        }
+                    }
+                });
+
+                // Close nav when clicking a link inside navigation
+                navigation.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 768) {
+                            navigation.setAttribute('aria-expanded', 'false');
+                            genrePage.setAttribute('aria-nav-expanded', 'false');
+                            mobileNavToggle.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                        }
+                    });
                 });
             }
         });

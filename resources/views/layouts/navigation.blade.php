@@ -137,7 +137,7 @@
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .component-1 {
-            width: 220px;
+            width: 250px;
         }
 
         .logo-1 {

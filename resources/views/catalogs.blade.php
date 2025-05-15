@@ -64,6 +64,25 @@
             left: 0;
         }
 
+        /* Hamburger toggle button */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #b5835a;
+            cursor: pointer;
+            position: absolute;
+            right: 10px; /* Changed from left: 10px to right: 10px */
+            top: 20px;
+            z-index: 1001;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            transform: rotate(90deg);
+        }
+
         /* Header with logo and title */
         .header-container {
             width: 100%;
@@ -112,14 +131,14 @@
         }
 
         .catalog-selection-page[aria-nav-expanded="true"] {
-            padding-left: 280px; /* Shift content right when sidebar is open on desktop */
+            padding-left: 280px;
         }
 
         /* Search bar styles */
         .search-container {
             display: flex;
             justify-content: center;
-            margin: 100px 0 40px; /* Adjusted for header height */
+            margin: 100px 0 40px;
         }
 
         .rectangle-7 {
@@ -274,7 +293,14 @@
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .hover-area {
-                display: none; /* Disable hover area on mobile */
+                display: none;
+            }
+
+            .nav-toggle {
+                display: block;
+                font-size: 20px; /* Slightly smaller for mobile */
+                right: 15px; /* Adjusted for better spacing */
+                top: 25px; /* Centered vertically in header */
             }
 
             .sidebar {
@@ -284,6 +310,8 @@
 
             .header-container {
                 height: 70px;
+                justify-content: center; /* Keep centered for title */
+                padding: 0 50px; /* Adjusted padding */
             }
 
             .logo {
@@ -291,7 +319,7 @@
             }
 
             .grand-archives2 {
-                font-size: 32px;
+                font-size: 28px; /* Slightly smaller */
             }
 
             .search-container {
@@ -327,7 +355,7 @@
             }
 
             .catalog-selection-page[aria-nav-expanded="true"] {
-                padding-left: 0; /* No shift on mobile */
+                padding-left: 0;
             }
         }
 
@@ -339,6 +367,12 @@
 
             .header-container {
                 height: 60px;
+            }
+
+            .nav-toggle {
+                font-size: 18px; /* Smaller for very small screens */
+                right: 10px;
+                top: 20px;
             }
 
             .logo {
@@ -378,6 +412,9 @@
 </head>
 <body>
     <div class="catalog-container">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <i class="fas fa-bars"></i>
+        </button>
         <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
         <div class="sidebar" aria-expanded="false">
             @include('layouts.navigation')
@@ -413,6 +450,7 @@
             const hoverArea = document.querySelector('.hover-area');
             const sidebar = document.querySelector('.sidebar');
             const catalogPage = document.querySelector('.catalog-selection-page');
+            const navToggle = document.querySelector('.nav-toggle');
 
             // Desktop hover navigation
             if (hoverArea) {
@@ -451,6 +489,19 @@
                         const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
                         sidebar.setAttribute('aria-expanded', !isExpanded);
                         catalogPage.setAttribute('aria-nav-expanded', !isExpanded);
+                    }
+                });
+            }
+
+            // Mobile toggle navigation
+            if (navToggle) {
+                navToggle.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+                        sidebar.setAttribute('aria-expanded', !isExpanded);
+                        catalogPage.setAttribute('aria-nav-expanded', !isExpanded);
+                        navToggle.setAttribute('aria-expanded', !isExpanded);
+                        navToggle.innerHTML = !isExpanded ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
                     }
                 });
             }

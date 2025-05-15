@@ -32,7 +32,34 @@
             position: relative;
         }
 
-        /* Hover area for desktop (Added from Catalog/Transactions) */
+        /* Mobile Navigation Toggle Button */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #b5835a;
+            cursor: pointer;
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            z-index: 9; /* Below sidebar but above header */
+            padding: 12px; /* Large touch area */
+            transition: transform 0.3s ease, color 0.2s ease;
+            line-height: 1;
+        }
+
+        .mobile-nav-toggle:hover,
+        .mobile-nav-toggle:focus {
+            color: #8c5f3f;
+            transform: rotate(90deg);
+        }
+
+        .mobile-nav-toggle:active {
+            color: #6b4e31;
+        }
+
+        /* Hover area for desktop */
         .hover-area {
             position: fixed;
             left: 0;
@@ -44,7 +71,7 @@
             cursor: pointer;
         }
 
-        /* Sidebar styles (Updated to match Catalog/Transactions) */
+        /* Sidebar styles */
         .sidebar {
             width: 250px;
             background: rgba(18, 18, 70, 0.9);
@@ -54,7 +81,7 @@
             left: -280px;
             top: 0;
             transition: left 0.3s ease-in-out;
-            z-index: 10;
+            z-index: 10; /* Above header and toggle */
             box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -74,7 +101,7 @@
         }
 
         .favorites-page[aria-nav-expanded="true"] {
-            padding-left: 250px; /* Updated to match sidebar width */
+            padding-left: 250px;
         }
 
         .rectangle-5 {
@@ -85,7 +112,7 @@
             left: 0;
             top: 0;
             border-bottom: 2px solid #b5835a;
-            z-index: 1;
+            z-index: 8; /* Below toggle and sidebar */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -186,7 +213,7 @@
         }
 
         .book-card p {
-            color: #d4a373;
+            color: #e9e9e9;
             text-align: center;
             font-family: "Inter-Regular", sans-serif;
             font-size: 14px;
@@ -198,8 +225,16 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            .mobile-nav-toggle {
+                display: block;
+                font-size: 22px;
+                right: 10px;
+                top: 10px;
+                padding: 14px;
+            }
+
             .hover-area {
-                display: none; /* Disable hover area on mobile */
+                display: none;
             }
 
             .sidebar {
@@ -208,7 +243,7 @@
             }
 
             .favorites-page[aria-nav-expanded="true"] {
-                padding-left: 0; /* No shift on mobile */
+                padding-left: 240px; /* Adjusted to match sidebar width */
             }
 
             .rectangle-5 {
@@ -223,9 +258,14 @@
                 max-width: 400px;
             }
 
+            .favorites-content {
+                padding: 15px; /* Reduced padding for more content space */
+                margin: 0 10px 20px; /* Reduced margins for better fit */
+            }
+
             .book-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                max-height: 50vh;
+                max-height: 65vh; /* Increased height for more visible content */
             }
 
             .book-card {
@@ -242,9 +282,20 @@
         }
 
         @media (max-width: 480px) {
+            .mobile-nav-toggle {
+                font-size: 20px;
+                right: 8px;
+                top: 8px;
+                padding: 12px;
+            }
+
             .sidebar {
                 width: 200px;
                 left: -200px;
+            }
+
+            .favorites-page[aria-nav-expanded="true"] {
+                padding-left: 200px; /* Adjusted to match sidebar width */
             }
 
             .rectangle-5 {
@@ -255,14 +306,22 @@
                 max-width: 300px;
             }
 
+            .favorites-content {
+                padding: 10px; /* Further reduced padding */
+                margin: 0 5px 10px; /* Further reduced margins */
+            }
+
             .book-grid {
-                max-height: 40vh;
+                max-height: 60vh; /* Adjusted height for smaller screens */
             }
         }
     </style>
 </head>
 <body>
     <div class="favorites-container">
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <i class="fa fa-bars"></i>
+        </button>
         <div class="hover-area" role="button" aria-label="Open sidebar" tabindex="0"></div>
         <div class="sidebar" aria-expanded="false">
             @include('layouts.navigation')
@@ -299,6 +358,42 @@
             const hoverArea = document.querySelector('.hover-area');
             const sidebar = document.querySelector('.sidebar');
             const favoritesPage = document.querySelector('.favorites-page');
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+
+            // Mobile navigation toggle
+            if (mobileNavToggle) {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+                    const newExpandedState = !isExpanded;
+                    sidebar.setAttribute('aria-expanded', newExpandedState);
+                    mobileNavToggle.setAttribute('aria-expanded', newExpandedState);
+                    favoritesPage.setAttribute('aria-nav-expanded', newExpandedState);
+                    mobileNavToggle.innerHTML = `<i class="fa ${newExpandedState ? 'fa-times' : 'fa-bars'}"></i>`;
+                });
+
+                // Close sidebar when clicking outside on mobile
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768 && sidebar.getAttribute('aria-expanded') === 'true' && !sidebar.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
+                        favoritesPage.setAttribute('aria-nav-expanded', 'false');
+                        mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                    }
+                });
+
+                // Close sidebar when clicking a link inside navigation
+                sidebar.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 768) {
+                            sidebar.setAttribute('aria-expanded', 'false');
+                            mobileNavToggle.setAttribute('aria-expanded', 'false');
+                            favoritesPage.setAttribute('aria-nav-expanded', 'false');
+                            mobileNavToggle.innerHTML = `<i class="fa fa-bars"></i>`;
+                        }
+                    });
+                });
+            }
 
             // Desktop hover navigation
             if (hoverArea) {
@@ -341,7 +436,7 @@
                 });
             }
 
-            // Search functionality (unchanged)
+            // Search functionality
             const searchInput = document.querySelector('.search-input');
             const bookCards = document.querySelectorAll('.book-card');
 
