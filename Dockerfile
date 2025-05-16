@@ -25,7 +25,8 @@ COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Install PHP dependencies with Composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
